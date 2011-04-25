@@ -1,0 +1,7 @@
+frame,value,interpolation,extrapolation,left_slope,right_slope
+1,-459.0,linear,,,
+22,222.919,hermite,,2.49462,-0.156017
+94,-227.0,constant,,-2.33348,-2.45723
+117,1.23907,natural,,14.0841,14.0841
+149,258.239,hermite,,-0.0149286,-0.0149286
+200,0.0,hermite,,,-0.302127
