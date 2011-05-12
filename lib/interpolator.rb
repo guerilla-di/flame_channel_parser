@@ -1,73 +1,55 @@
+require File.expand_path(File.dirname(__FILE__)) + "/segments"
+
 class FlameInterpolator
+  attr_reader :segments
   
-  def initialize(chan)
-    @chan = chan
-  end
-  
-  def bake(from_frame, upto__and_including_frame)
-    # Will return an array of values
-    (from_frame..upto__and_including_frame).map do | at_f |
-      sample_at(at_f)
+  def initialize(channel)
+    
+    # Edge case - channel has no anim at all
+    if (channel.length == 0)
+      @segments = [ConstantFunction.new(channel.base_value)]
+    elsif (channel.length == 1)
+      @segments = [ConstantFunction.new(channel[0].value)]
+    else
+      @segments = []
+      
+      # TODO: extrapolation is set for the whole channel, both begin and end.
+      # First the prepolating segment
+      @segments << ConstantPrepolate.new(channel[0].frame, channel[0].value)
+      
+      # The last key defines extrapolation for the rest of the curve...
+      channel[0..-2].each_with_index do | key, index |
+        @segments << key_to_segment(key, channel[index + 1])
+      end
+      
+      # so we just output it separately
+      @segments << ConstantExtrapolate.new(@segments[-1].to_f, channel[-1].value)
     end
   end
   
   def sample_at(frame)
-    left_f, right_f = find_siblings(frame)
-    if left_f && right_f && (left_f == right_f) # On the value 
-      left_f.value
-    elsif !left_f && right_f
-      extrapolate_based_on(frame, right_f)
-    elsif left_f && !right_f
-      extrapolate_based_on(frame, left_f)
-    elsif (left_f && right_f)
-      interpolate_between(left_f, right_f, frame)
-    else
-      raise "No frames to either side of #{frame}, giving up"
-    end
+    segment = @segments.find{|s| s.defines?(frame) }
+    segment.value_at(frame)
   end
   
   private
   
-  def interpolate_between(left_f, right_f, frame)
-    if left_f.interpolation == :constant
-      left_f.value
-    elsif left_f.interpolation == :linear
-      y_int = (right_f.value - left_f.value)
-      x_int = (right_f.frame - left_f.frame)
-      x_off = frame - left_f.frame
-      (x_off.to_f / x_int.to_f) * y_int # just lerp
-    elsif left_f.interpolation == :hermite
-      interp_hermite(left_f, right_f, frame)
-    elsif left_f.interpolation == :natural
-      raise "Fail. Julik needs mathz for natural."
+  # We need both the preceding and the next key
+  def key_to_segment(key, next_key)
+    case key.interpolation
+      when :natural
+        NaturalSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.left_slope, next_key.right_slope)
+      when :hermite
+        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.left_slope, next_key.right_slope)
+      when :linear
+        LinearSegment.new(key.frame, next_key.frame, key.value, next_key.value)
+      when :constant
+        ConstantSegment.new(key.frame, next_key.frame, key.value)
+      else
+        raise "Unknown segment type #{key.interpolation}"
     end
   end
-
-  def interp_hermite(left_f, right_f, frame)
-    puts [left_f, right_f, frame].inspect
-    
-    raise "Fail. Julik needs mathz for hermite."
-  end
   
-  def find_siblings(of_frame)
-    left, right = nil, nil
-    right = @chan.find{|k| k.frame >= of_frame }
-    left = @chan.reverse.find{|k| k.frame <= of_frame }
-    [left, right]
-  end
-  
-  def extrapolate_based_on(frame, base_f)
-    if (base_f.extrapolation == :constant)
-      base_f.value
-    elsif (base_f.extrapolation == :linear)
-      frame_dist = base_f.frame
-      coeff = base_f.left_slope # Pitfall
-      base_f.value - ((frame - base_f.frame) * coeff)
-    elsif !base_f.extrapolation # Flame does not write extrap when interp is present - use the interpolation value instead
-      dupe = base_f.dup
-      dupe.extrapolation = (base_f.interpolation == :constant) ? :constant : :linear
-      extrapolate_based_on(frame, dupe)
-    end
-  end
   
 end
+

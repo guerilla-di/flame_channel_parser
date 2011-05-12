@@ -1,5 +1,5 @@
 require "delegate"
-require "interpolator"
+require File.dirname(__FILE__) + "/interpolator"
 
 class FlameChannelParser
   VERSION = '1.0.0'

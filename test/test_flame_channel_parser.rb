@@ -29,7 +29,9 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_equal 65, channels.length, "Should find 65 channels"
     channels.reject!{|c| c.length < 2 }
     assert_equal 2, channels.length, "Should have 2 channels with more than 2 keyframes"
+    puts channels[0].inspect
   end
+  
 end
 
 __END__

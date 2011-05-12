@@ -1,31 +1,37 @@
 require "test/unit"
-require "flame_channel_parser"
-
+require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
+  D = 0.001
 class TestFlameChannelParser < Test::Unit::TestCase
-  D = 0.0001
+
+  def tabulate(enum)
+    STDERR.flush
+    enum.each{|tuple| STDERR.puts("%05d %04f" % tuple) }
+  end
+  
+  def tabulate_compare(enum)
+    STDERR.flush
+    a, b, delta = 
+    enum.each do |tuple| 
+      f, a, b = tuple
+      delta = a - b
+      if delta.abs > D
+        STDERR.puts("Deviation at %d -> expected %04f and got %04f, delta %04f" %  [f, a, b, delta])
+        STDERR.flush
+      end
+    end
+  end
   
   def test_channel_with_constants
     constants = FlameChannelParser.new.parse(DATA).find{|c| c.name == "constants"}
     interp = FlameInterpolator.new(constants)
+    puts interp.segments.inspect
     
     values = {}
     
-    (-5..116).map{|f| values[f] = interp.sample_at(f) }
-    assert_equal 122, values.length
+    values = (-5..116).map{|f| [f, interp.sample_at(f)] }
+    #tabulate(values)
     
-    assert_in_delta 770.41, values[-5], D, "Value at -5 should be extraped from the key at frame 1"
     
-    (1...44).each do | at |
-      assert_in_delta 770.41, values[at], D, "Value for frame #{at} should be in delta"
-    end
-    
-    (44...74).each do | at |
-      assert_in_delta 858.177, values[at],  D, "Value for frame #{at} should be in delta"
-    end
-    
-    assert_not_nil values[116], "Value for frame 116 should have been provided"
-    
-    assert_in_delta 1017.36, values[116], D, "Value for frame 116 should be properly extrapolated"
     
   end
   
@@ -37,9 +43,13 @@ class TestFlameChannelParser < Test::Unit::TestCase
     sampled = channels_in_action.find{|c| c.name == "position/y" }
     ref_i, sample_i = [reference, sampled].map{|c| FlameInterpolator.new(c) }
     
+    puts ref_i.segments.inspect
+    
     value_tuples = (1..200).map do |f|  
-      [ref_i.sample_at(f), sample_i.sample_at(f)]
+      [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
+    
+    tabulate_compare(value_tuples)
   end
 end
 

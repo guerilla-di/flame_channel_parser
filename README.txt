@@ -26,8 +26,6 @@ Includes a small library for parsing and baking anmation curves made on Discrode
 
 (The MIT License)
 
-Includes the Curves library, copyright (c) by Jamis Buck
-
 Copyright (c) 2011 Julik Tarkhanov
 
 Permission is hereby granted, free of charge, to any person obtaining
