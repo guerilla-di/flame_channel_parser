@@ -55,7 +55,8 @@ class HermiteSegment < LinearSegment
     @end_frame = to_frame
     
     # CC = {P1, P2, T1, T2}
-    p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * frame_interval
+    # flipsign?
+    p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * -1 * frame_interval
     @hermite = Vector[p1, p2, t1, t2]
   end
   
@@ -82,8 +83,11 @@ class HermiteSegment < LinearSegment
   
 end
 
-# TODO: Represents a segment with Natural interp
+#  Natural interpolation is flipsign Hermite
 class NaturalSegment  < HermiteSegment
+  def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
+    super(from_frame, to_frame, value1, value2, tangent1 * -1, tangent2 * -1)
+  end
 end
 
 class ConstantPrepolate < LinearSegment
