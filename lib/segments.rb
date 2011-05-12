@@ -112,7 +112,7 @@ class ConstantFunction < LinearSegment
   def initialize(value)
     @value = value
     @from_f = NEG_INF
-    @to_f = NEG_INF
+    @to_f = POS_INF
   end
   
   def value_at(frame)
