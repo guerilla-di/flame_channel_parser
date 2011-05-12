@@ -36,7 +36,7 @@ class LinearSegment < ConstantSegment
   end
   
   def value_at(frame)
-    on_t_interval = (frame - @start_frame).to_f / (@end_frame - @end_frame)
+    on_t_interval = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     @v1 + (on_t_interval * @vint)
   end
 end
@@ -51,7 +51,8 @@ class HermiteSegment < LinearSegment
   ]
   
   def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
-    super(from_frame, to_frame, value1, value2)
+    @start_frame = from_frame
+    @end_frame = to_frame
     
     # CC = {P1, P2, T1, T2}
     p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * frame_interval
@@ -62,7 +63,7 @@ class HermiteSegment < LinearSegment
   def value_at(frame)
     
     # Q[frame_] = P[ ( frame - 149 ) / (time_to - time_from)]
-    on_t_interval = (frame - @start_frame).to_f / frame_interval.to_f
+    on_t_interval = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     
     # S[s_] = {s^3, s^2, s^1, s^0}
     multipliers_vec = Vector[on_t_interval ** 3,  on_t_interval ** 2, on_t_interval ** 1, on_t_interval ** 0]
@@ -104,7 +105,7 @@ end
 
 class ConstantExtrapolate < LinearSegment
   def initialize(from_frame, base_value)
-    @from_f = from_frame
+    @start_frame = from_frame
     @base_value = base_value
     @end_frame = POS_INF
   end
@@ -149,13 +150,6 @@ end
 
 if __FILE__ == $0
 
-  line = LinearSegment.new(
-    time_from = 1,
-    time_to = 149,
-    value1 = 13,
-    value2 = 258.239
-  )
-
   herm = HermiteSegment.new(
     time_from = 149,
     time_to = 200,
@@ -165,9 +159,7 @@ if __FILE__ == $0
     tangent2 = -0.302127
   )
 
-  curve  = CompoundSegment.new(line, herm)
-
-  (1..200).each do | f |
-    puts curve.value_at(f)
+  (149..200).each do | f |
+    puts herm.value_at(f)
   end
 end

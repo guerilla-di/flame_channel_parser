@@ -14,8 +14,17 @@ end
 
 
 class TestConstantSegment < Test::Unit::TestCase
-  def test_fail
-    flunk
+  def test_segment
+    seg = ConstantSegment.new(12, 25, 2.5)
+    
+    assert !seg.defines?(11), "This frame is outside the segment"
+    assert !seg.defines?(26), "This frame is outside the segment"
+    assert seg.defines?(12), "Frame 12 defined"
+    assert seg.defines?(24), "Frame 24 defined"
+    
+    assert_equal 2.5, seg.value_at(11)
+    assert_equal 2.5, seg.value_at(14)
+    assert_equal 2.5, seg.value_at(26)
   end
 end
 
@@ -27,6 +36,9 @@ class TestLinearSegment < Test::Unit::TestCase
     assert !seg.defines?(26), "This frame is outside the segment"
     assert seg.defines?(12), "Frame 12 defined"
     assert seg.defines?(24), "Frame 24 defined"
+    
+    assert_in_delta 2.8076, seg.value_at(14), D
+    assert_in_delta 2.9615, seg.value_at(15), D
   end
 end
 
@@ -44,8 +56,13 @@ end
 
 
 class TestConstantPrepolate < Test::Unit::TestCase
-  def test_fail
-    flunk
+  def test_segment
+    seg = ConstantPrepolate.new(12, 234.5)
+    assert seg.defines?(11)
+    assert !seg.defines?(12)
+    assert !seg.defines?(13)
+    assert seg.defines?(-1234)
+    assert_equal 234.5, seg.value_at(12)
   end
 end
 
