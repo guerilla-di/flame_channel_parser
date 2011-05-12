@@ -1,6 +1,9 @@
 require "test/unit"
+require "stringio"
+
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
-  D = 0.001
+D = 0.25
+
 class TestFlameChannelParser < Test::Unit::TestCase
 
   def tabulate(enum)
@@ -8,31 +11,12 @@ class TestFlameChannelParser < Test::Unit::TestCase
     enum.each{|tuple| STDERR.puts("%05d %04f" % tuple) }
   end
   
-  def tabulate_compare(enum)
-    STDERR.flush
-    a, b, delta = 
-    enum.each do |tuple| 
-      f, a, b = tuple
-      delta = a - b
-      if delta.abs > D
-        STDERR.puts("Deviation at %d -> expected %04f and got %04f, delta %04f" %  [f, a, b, delta])
-        STDERR.flush
-      end
-    end
-  end
-  
   def test_channel_with_constants
     constants = FlameChannelParser.new.parse(DATA).find{|c| c.name == "constants"}
     interp = FlameInterpolator.new(constants)
-    puts interp.segments.inspect
-    
-    values = {}
-    
     values = (-5..116).map{|f| [f, interp.sample_at(f)] }
+    
     #tabulate(values)
-    
-    
-    
   end
   
   def test_whole_thing
@@ -41,13 +25,22 @@ class TestFlameChannelParser < Test::Unit::TestCase
     
     reference = channels_in_action.find{|c| c.name == "position/x" }
     sampled = channels_in_action.find{|c| c.name == "position/y" }
+    
     ref_i, sample_i = [reference, sampled].map{|c| FlameInterpolator.new(c) }
     
     value_tuples = (1..200).map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
     
-    tabulate_compare(value_tuples)
+    # This is handy for plotting
+    # IO.popen("pbcopy", "w") do |buf|
+    #   (1..200).map{|f| buf.puts  "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
+    # end
+    
+    value_tuples.each do | frame, ref, actual |
+      assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"
+    end
+    
   end
 end
 

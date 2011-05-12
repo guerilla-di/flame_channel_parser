@@ -31,10 +31,6 @@ class LinearSegment < ConstantSegment
     super(from_frame, to_frame, value1)
   end
   
-  def frame_interval
-    @start_frame - @end_frame
-  end
-  
   def value_at(frame)
     on_t_interval = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     @v1 + (on_t_interval * @vint)
@@ -43,20 +39,22 @@ end
 
 class HermiteSegment < LinearSegment
   
+  # In Ruby matrix columns can be better written as arrays, so here we go
   HERMATRIX = Matrix[
-    [2,  -2,  1,  1],
-    [-3,  3, -2, -1],
-    [0,   0,  1,  0],
-    [1,   0,  0,  0]
-  ]
+    [2,  -3,   0,  1],
+    [-2,  3,   0,  0],
+    [1,   -2,  1,  0],
+    [1,   -1,  0,  0]
+  ].transpose
   
   def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
     @start_frame = from_frame
     @end_frame = to_frame
     
+    frame_interval = (@end_frame - @start_frame)
+    
     # CC = {P1, P2, T1, T2}
-    # flipsign?
-    p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * -1 * frame_interval
+    p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * frame_interval
     @hermite = Vector[p1, p2, t1, t2]
   end
   
@@ -81,13 +79,6 @@ class HermiteSegment < LinearSegment
     sum
   end
   
-end
-
-#  Natural interpolation is flipsign Hermite
-class NaturalSegment  < HermiteSegment
-  def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
-    super(from_frame, to_frame, value1, value2, tangent1 * -1, tangent2 * -1)
-  end
 end
 
 class ConstantPrepolate < LinearSegment
@@ -131,24 +122,6 @@ class ConstantFunction < ConstantSegment
   
   def value_at(frame)
     @value
-  end
-end
-
-# Represents the whole curve
-class CompoundSegment
-  def initialize(*contained_segments)
-    @segments = contained_segments.flatten
-  end
-  
-  def value_at(frame)
-    if frame <= @segments[0].start_frame || frame < @segments[0].end_frame
-      @segments[0].value_at(frame)
-    elsif frame >= @segments[-1].end_frame
-      @segments[-1].value_at(frame)
-    else
-      on_segment = @segments.find{|s| (s.start_frame <= frame) && (s.end_frame >= frame) }
-      on_segment.value_at(frame)
-    end
   end
 end
 

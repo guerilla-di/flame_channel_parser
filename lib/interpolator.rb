@@ -23,7 +23,7 @@ class FlameInterpolator
       end
       
       # so we just output it separately
-      @segments << ConstantExtrapolate.new(@segments[-1].to_f, channel[-1].value)
+      @segments << ConstantExtrapolate.new(@segments[-1].start_frame, channel[-1].value)
     end
   end
   
@@ -37,10 +37,8 @@ class FlameInterpolator
   # We need both the preceding and the next key
   def key_to_segment(key, next_key)
     case key.interpolation
-      when :natural
-        NaturalSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.left_slope, next_key.right_slope)
-      when :hermite
-        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.left_slope, next_key.right_slope)
+      when :natural, :hermite
+        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, outgoing_slope(next_key))
       when :linear
         LinearSegment.new(key.frame, next_key.frame, key.value, next_key.value)
       when :constant
@@ -50,6 +48,10 @@ class FlameInterpolator
     end
   end
   
+  def outgoing_slope(from_key)
+    # key.broken_tangent? ? key.left_slope : key.right_slope
+    from_key.right_slope
+  end
   
 end
 
