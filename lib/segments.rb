@@ -3,26 +3,40 @@ require "matrix"
 NEG_INF = (-1.0/0.0)
 POS_INF = (1.0/0.0)
 
-class LinearSegment
-  attr_reader :from_f, :to_f
+# This segment just stays on the value of it's keyframe
+# TODO: speedup
+class ConstantSegment
+  attr_reader :start_frame, :end_frame
   
   def defines?(frame)
-    (frame < to_f) && (frame >= from_f)
-  end
-  
-  def initialize(from_frame, to_frame, value1, value2)
-    @from_f = from_frame
-    @to_f = to_frame
-    @v1 = value1
-    @vint = (value2 - value1)
-  end
-  
-  def frame_interval
-    @to_f - @from_f
+    (frame < end_frame) && (frame >= start_frame)
   end
   
   def value_at(frame)
-    on_t_interval = (frame - @from_f).to_f / (@to_f - @from_f)
+    @v1
+  end
+  
+  def initialize(from_frame, to_frame, value)
+    @start_frame = from_frame
+    @end_frame = to_frame
+    
+    @v1 = value
+  end
+end
+
+class LinearSegment < ConstantSegment
+  
+  def initialize(from_frame, to_frame, value1, value2)
+    @vint = (value2 - value1)
+    super(from_frame, to_frame, value1)
+  end
+  
+  def frame_interval
+    @start_frame - @end_frame
+  end
+  
+  def value_at(frame)
+    on_t_interval = (frame - @start_frame).to_f / (@end_frame - @end_frame)
     @v1 + (on_t_interval * @vint)
   end
 end
@@ -48,7 +62,7 @@ class HermiteSegment < LinearSegment
   def value_at(frame)
     
     # Q[frame_] = P[ ( frame - 149 ) / (time_to - time_from)]
-    on_t_interval = (frame - @from_f).to_f / frame_interval.to_f
+    on_t_interval = (frame - @start_frame).to_f / frame_interval.to_f
     
     # S[s_] = {s^3, s^2, s^1, s^0}
     multipliers_vec = Vector[on_t_interval ** 3,  on_t_interval ** 2, on_t_interval ** 1, on_t_interval ** 0]
@@ -71,19 +85,11 @@ end
 class NaturalSegment  < HermiteSegment
 end
 
-# This segment just stays on the value of it's keyframe
-# TODO: speedup
-class ConstantSegment < LinearSegment
-  def initialize(from_frame, to_frame, value)
-    super(from_frame, to_frame, value, value)
-  end
-end
-
 class ConstantPrepolate < LinearSegment
   def initialize(upto_frame, base_value)
     @value = base_value
-    @to_f = upto_frame
-    @from_f = NEG_INF
+    @end_frame = upto_frame
+    @start_frame = NEG_INF
   end
   
   def value_at(frame)
@@ -100,7 +106,7 @@ class ConstantExtrapolate < LinearSegment
   def initialize(from_frame, base_value)
     @from_f = from_frame
     @base_value = base_value
-    @to_f = POS_INF
+    @end_frame = POS_INF
   end
   
   def value_at(frame)
@@ -108,11 +114,14 @@ class ConstantExtrapolate < LinearSegment
   end
 end
 
-class ConstantFunction < LinearSegment
+class ConstantFunction < ConstantSegment
+  
+  def defines?(frame)
+    true
+  end
+  
   def initialize(value)
     @value = value
-    @from_f = NEG_INF
-    @to_f = POS_INF
   end
   
   def value_at(frame)
@@ -127,12 +136,12 @@ class CompoundSegment
   end
   
   def value_at(frame)
-    if frame <= @segments[0].from_f || frame < @segments[0].to_f
+    if frame <= @segments[0].start_frame || frame < @segments[0].end_frame
       @segments[0].value_at(frame)
-    elsif frame >= @segments[-1].to_f
+    elsif frame >= @segments[-1].end_frame
       @segments[-1].value_at(frame)
     else
-      on_segment = @segments.find{|s| (s.from_f <= frame) && (s.to_f >= frame) }
+      on_segment = @segments.find{|s| (s.start_frame <= frame) && (s.end_frame >= frame) }
       on_segment.value_at(frame)
     end
   end

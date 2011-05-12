@@ -20,8 +20,13 @@ class TestConstantSegment < Test::Unit::TestCase
 end
 
 class TestLinearSegment < Test::Unit::TestCase
-  def test_fail
-    flunk
+  def test_segment
+    seg = LinearSegment.new(12, 25, 2.5, 4.5)
+    
+    assert !seg.defines?(11), "This frame is outside the segment"
+    assert !seg.defines?(26), "This frame is outside the segment"
+    assert seg.defines?(12), "Frame 12 defined"
+    assert seg.defines?(24), "Frame 24 defined"
   end
 end
 

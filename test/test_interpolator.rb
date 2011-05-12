@@ -43,8 +43,6 @@ class TestFlameChannelParser < Test::Unit::TestCase
     sampled = channels_in_action.find{|c| c.name == "position/y" }
     ref_i, sample_i = [reference, sampled].map{|c| FlameInterpolator.new(c) }
     
-    puts ref_i.segments.inspect
-    
     value_tuples = (1..200).map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
