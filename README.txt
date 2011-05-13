@@ -8,7 +8,8 @@ Includes a small library for parsing and baking anmation curves made on Discrode
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Currently only supports file versions up to and including 2011
+* Only constant extrapolation for now, no looping or pingpong
 
 == SYNOPSIS:
 

@@ -39,7 +39,7 @@ end
 
 class HermiteSegment < LinearSegment
   
-  # In Ruby matrix columns can be better written as arrays, so here we go
+  # In Ruby matrix columns are arrays, so here we go
   HERMATRIX = Matrix[
     [2,  -3,   0,  1],
     [-2,  3,   0,  0],
@@ -48,6 +48,11 @@ class HermiteSegment < LinearSegment
   ].transpose
   
   def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
+    
+    # Default tangents in flame are 1
+    tangent1 ||= 1
+    tangent2 ||= 1
+    
     @start_frame = from_frame
     @end_frame = to_frame
     

@@ -41,7 +41,7 @@ class FlameInterpolator
   def key_to_segment(key, next_key)
     case key.interpolation.to_sym
       when :natural, :hermite, :bezier
-        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, outgoing_slope(next_key))
+        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, incoming_slope(next_key))
       when :constant
         ConstantSegment.new(key.frame, next_key.frame, key.value)
       else # Linear and safe
@@ -49,9 +49,8 @@ class FlameInterpolator
     end
   end
   
-  def outgoing_slope(from_key)
-    # key.broken_tangent? ? key.left_slope : key.right_slope
-    from_key.right_slope
+  def incoming_slope(key)
+    key.broken? ? key.left_slope : key.right_slope
   end
   
 end

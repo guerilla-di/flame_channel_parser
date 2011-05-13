@@ -3,8 +3,12 @@ require "delegate"
 class FlameChannelParser::Parser2011
   
   class Key
-    attr_accessor :frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope
+    attr_accessor :frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope, :break_slope
     alias_method :to_s, :inspect
+    
+    def broken?
+      break_slope
+    end
   end
   
   def matchers
@@ -15,6 +19,7 @@ class FlameChannelParser::Parser2011
       [:right_slope, :to_f, /RightSlope ([\-\d\.]+)/],
       [:interpolation, :to_s, /Interpolation (\w+)/],
       [:extrapolation, :to_s, /Extrapolation (\w+)/],
+      [:break_slope, :to_s, /BreakSlope (\w+)/]
     ]
   end
   
@@ -30,18 +35,18 @@ class FlameChannelParser::Parser2011
       
       @parser = parent_parser
       @name = channel_name.strip
-
+      
       base_value_matcher = /Value ([\-\d\.]+)/
       keyframe_count_matcher = /Size (\d+)/
       indent = nil
-
+      
       while line = io.gets
-
+        
         unless indent 
           indent = line.scan(/^(\s+)/)[1]
           end_mark = "#{indent}End"
         end
-
+        
         if line =~ keyframe_count_matcher
           $1.to_i.times { push(extract_key_from(io)) }
         elsif line =~ base_value_matcher && empty?
