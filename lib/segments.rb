@@ -49,17 +49,14 @@ class HermiteSegment < LinearSegment
   
   def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
     
-    # Default tangents in flame are 1
-    tangent1 ||= 1
-    tangent2 ||= 1
-    
     @start_frame = from_frame
     @end_frame = to_frame
     
     frame_interval = (@end_frame - @start_frame)
     
+    # Default tangents in flame are 0, so when we do nil.to_f this is what we will get
     # CC = {P1, P2, T1, T2}
-    p1, p2, t1, t2 = value1, value2, tangent1 * frame_interval, tangent2 * frame_interval
+    p1, p2, t1, t2 = value1, value2, tangent1.to_f * frame_interval, tangent2.to_f * frame_interval
     @hermite = Vector[p1, p2, t1, t2]
   end
   

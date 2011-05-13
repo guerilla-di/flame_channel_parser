@@ -6,17 +6,10 @@ D = 0.25
 
 class TestFlameChannelParser < Test::Unit::TestCase
 
-  def tabulate(enum)
-    STDERR.flush
-    enum.each{|tuple| STDERR.puts("%05d %04f" % tuple) }
-  end
-  
   def test_channel_with_constants
     constants = FlameChannelParser::Parser2011.new.parse(DATA).find{|c| c.name == "constants"}
     interp = FlameInterpolator.new(constants)
     values = (-5..116).map{|f| [f, interp.sample_at(f)] }
-    
-    #tabulate(values)
   end
   
   def test_simple_setup_from_2011
