@@ -223,12 +223,6 @@ class TestHermiteSegment < Test::Unit::TestCase
   end
 end
 
-class TestNaturalSegment < Test::Unit::TestCase
-  def test_fail
-    flunk
-  end
-end
-
 class TestLinearPrepolate < Test::Unit::TestCase
   def test_fail
     flunk
