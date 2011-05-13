@@ -1,11 +1,16 @@
 require File.expand_path(File.dirname(__FILE__)) + "/segments"
 
-# Used to interpolate Flame animation curves. Pass a Channel
+# Used to sample Flame animation curves. Pass a Channel
 # object to the interpolator and you can then sample values at arbitrary
 # frames
-class FlameInterpolator
+class FlameChannelParser::Interpolator
   attr_reader :segments
   
+  NEG_INF = (-1.0/0.0)
+  POS_INF = (1.0/0.0)
+  
+  # The constructor will accept a ChannelBlock object and convert it internally to a number of
+  # segments from which samples can be made
   def initialize(channel)
     
     # Edge case - channel has no anim at all
@@ -30,9 +35,26 @@ class FlameInterpolator
     end
   end
   
+  # Sample the value of the animation curve at this frame
   def sample_at(frame)
     segment = @segments.find{|s| s.defines?(frame) }
     segment.value_at(frame)
+  end
+  
+  # Returns the first frame number that is concretely defined as a keyframe
+  # after the prepolation ends
+  def first_defined_frame
+    first_f = @segments[0].end_frame
+    return 1 if first_f == NEG_INF
+    return first_f
+  end
+  
+  # Returns the last frame number that is concretely defined as a keyframe
+  # before the extrapolation starts
+  def last_defined_frame
+    last_f = @segments[-1].start_frame
+    return 100 if last_f == POS_INF
+    return last_f
   end
   
   private

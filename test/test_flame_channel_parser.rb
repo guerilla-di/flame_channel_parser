@@ -1,11 +1,11 @@
 require "test/unit"
-require "flame_channel_parser"
 
 class TestFlameChannelParser < Test::Unit::TestCase
   D = 0.0001
   
   def test_parsing
-    channels = FlameChannelParser::Parser2011.new.parse(DATA)
+    data = File.open(File.dirname(__FILE__) + "/sample_channel.dat")
+    channels = FlameChannelParser.parse(data)
     assert_kind_of Array, channels
     assert_equal 1, channels.length, "Should find one channel"
     
@@ -23,7 +23,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
   
   def test_action
     f = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example.action")
-    channels = FlameChannelParser::Parser2011.new.parse(f)
+    channels = FlameChannelParser.parse(f)
     
     assert_kind_of Array, channels
     assert_equal 65, channels.length, "Should find 65 channels"
@@ -36,7 +36,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
   
   def test_action_from_2012
     f = File.open(File.dirname(__FILE__) + "/snaps/FLEM_advanced_curve_example_FL2012.action")
-    channels = FlameChannelParser::Parser2012.new.parse(f)
+    channels = FlameChannelParser.parse(f)
     
     assert_kind_of Array, channels
     assert_equal 65, channels.length, "Should find 65 channels"
@@ -49,43 +49,3 @@ class TestFlameChannelParser < Test::Unit::TestCase
   end
   
 end
-
-__END__
-
-
-=begin
-Here's how a Flame channel looks like
-The Size will not be present if there are no keyframes
-
-Channel tracker1/ref/x
-	Extrapolation constant
-	Value 770.41
-	Size 4
-	KeyVersion 1
-	Key 0
-		Frame 1
-		Value 770.41
-		Interpolation constant
-		End
-	Key 1
-		Frame 44
-		Value 858.177
-		Interpolation constant
-		RightSlope 2.31503
-		LeftSlope 2.31503
-		End
-	Key 2
-		Frame 74
-		Value 939.407
-		Interpolation constant
-		RightSlope 2.24201
-		LeftSlope 2.24201
-		End
-	Key 3
-		Frame 115
-		Value 1017.36
-		Interpolation constant
-		End
-	Colour 50 50 50 
-	End
-=end
