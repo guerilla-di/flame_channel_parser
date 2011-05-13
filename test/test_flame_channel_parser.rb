@@ -3,6 +3,14 @@ require "test/unit"
 class TestFlameChannelParser < Test::Unit::TestCase
   D = 0.0001
   
+  def test_parsing_baked_timewarp_from_2011
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW.timewarp")
+    chan = FlameChannelParser.parse(data).find{|c| c.name == "Timing/Timing"}
+    assert_equal 816, chan.length
+    assert_equal 1, chan[0].frame
+    assert_equal 816, chan[-1].frame
+  end
+  
   def test_parsing
     data = File.open(File.dirname(__FILE__) + "/sample_channel.dat")
     channels = FlameChannelParser.parse(data)

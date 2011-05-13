@@ -13,6 +13,15 @@ class TestInterpolator < Test::Unit::TestCase
     values = (-5..116).map{|f| [f, interp.sample_at(f)] }
   end
   
+  def test_baked_timewarp_from_2011
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW.timewarp")
+    chan = FlameChannelParser.parse(data).find{|c| c.name == "Timing/Timing"}
+    sampler = FlameChannelParser::Interpolator.new(chan)
+    
+    assert_equal 1, sampler.first_defined_frame
+    assert_equal 816, sampler.last_defined_frame
+  end
+  
   def test_simple_setup_from_2011
     data = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example.action")
     channels_in_action = FlameChannelParser::Parser2011.new.parse(data)
@@ -24,7 +33,7 @@ class TestInterpolator < Test::Unit::TestCase
     ref_i, sample_i = [reference, sampled].map{|c| FlameChannelParser::Interpolator.new(c) }
     
     assert_equal 1, sample_i.first_defined_frame
-    assert_equal 149, sample_i.last_defined_frame
+    assert_equal 200, sample_i.last_defined_frame
     
     value_tuples = (1..200).map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]

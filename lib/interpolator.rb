@@ -33,7 +33,7 @@ class FlameChannelParser::Interpolator
       end
       
       # so we just output it separately
-      @segments << ConstantExtrapolate.new(@segments[-1].start_frame, channel[-1].value)
+      @segments << ConstantExtrapolate.new(@segments[-1].end_frame, channel[-1].value)
     end
   end
   
