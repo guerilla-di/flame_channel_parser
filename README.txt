@@ -13,8 +13,20 @@ Includes a small library for parsing and baking anmation curves made on Discrode
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
-
+    require "flame_channel_parser"
+    parser = FlameChannelParser::Parser2011.new
+    channels = File.open("TW_Setup.timewarp") do | f |
+      parser.parse(f)
+    end
+    
+    # Find the channel that we are interested in
+    frame_channel = channels.find{|c| c.name == "Frame" }
+    
+    # Now sample from frame 20 to frame 250
+    (20..250).each do | frame_in_setup |
+      p frame_channel.value_at(frame_in_setup)
+    end
+    
 == REQUIREMENTS:
 
 * FIX (list of requirements)

@@ -2,10 +2,10 @@ require "test/unit"
 require "stringio"
 
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
-D = 0.25
 
-class TestFlameChannelParser < Test::Unit::TestCase
-
+class TestInterpolator < Test::Unit::TestCase
+  DELTA = 0.01
+  
   def test_channel_with_constants
     constants = FlameChannelParser::Parser2011.new.parse(DATA).find{|c| c.name == "constants"}
     interp = FlameInterpolator.new(constants)
@@ -26,7 +26,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
     end
     
     value_tuples.each do | frame, ref, actual |
-      assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"
+      assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
     end
   end
   
@@ -49,7 +49,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
     end
     
     value_tuples.each do | frame, ref, actual |
-      assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"
+      assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
     end
   end
   
@@ -72,7 +72,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
     end
     
     value_tuples.each do | frame, ref, actual |
-      assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"
+      assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
     end
     
   end
