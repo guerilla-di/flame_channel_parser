@@ -12,15 +12,15 @@ class TestFlameChannelParser < Test::Unit::TestCase
   end
   
   def test_channel_with_constants
-    constants = FlameChannelParser.new.parse(DATA).find{|c| c.name == "constants"}
+    constants = FlameChannelParser::Parser2011.new.parse(DATA).find{|c| c.name == "constants"}
     interp = FlameInterpolator.new(constants)
     values = (-5..116).map{|f| [f, interp.sample_at(f)] }
     
     #tabulate(values)
   end
   
-  def test_whole_thing
-    channels_in_action = FlameChannelParser.new.parse(File.open("./snaps/FLEM_curves_example.action"))
+  def test_simple_setup
+    channels_in_action = FlameChannelParser::Parser2011.new.parse(File.open("./snaps/FLEM_curves_example.action"))
     channels_in_action.reject!{|c| c.length < 4 }
     
     reference = channels_in_action.find{|c| c.name == "position/x" }
@@ -32,10 +32,28 @@ class TestFlameChannelParser < Test::Unit::TestCase
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
     
+    value_tuples.each do | frame, ref, actual |
+      assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"
+    end
+  end
+  
+  def test_setup_from_2012
+    channels_in_action = FlameChannelParser::Parser2012.new.parse(File.open("./snaps/FLEM_advanced_curve_example_FL2012.action"))
+    channels_in_action.reject!{|c| c.length < 4 }
+    
+    reference = channels_in_action.find{|c| c.name == "position/x" }
+    sampled = channels_in_action.find{|c| c.name == "position/y" }
+    
+    ref_i, sample_i = [reference, sampled].map{|c| FlameInterpolator.new(c) }
+    
+    value_tuples = (1..330).map do |f|  
+      [f, ref_i.sample_at(f), sample_i.sample_at(f)]
+    end
+    
     # This is handy for plotting
-    # IO.popen("pbcopy", "w") do |buf|
-    #   (1..200).map{|f| buf.puts  "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
-    # end
+    IO.popen("pbcopy", "w") do |buf|
+      (1..330).map{|f| buf.puts  "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
+    end
     
     value_tuples.each do | frame, ref, actual |
       assert_in_delta ref, actual, D, "At #{frame} Interpolated value should be in delta"

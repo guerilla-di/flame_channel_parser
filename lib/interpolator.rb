@@ -1,5 +1,8 @@
 require File.expand_path(File.dirname(__FILE__)) + "/segments"
 
+# Used to interpolate Flame animation curves. Pass a Channel
+# object to the interpolator and you can then sample values at arbitrary
+# frames
 class FlameInterpolator
   attr_reader :segments
   
@@ -36,15 +39,13 @@ class FlameInterpolator
   
   # We need both the preceding and the next key
   def key_to_segment(key, next_key)
-    case key.interpolation
-      when :natural, :hermite
+    case key.interpolation.to_sym
+      when :natural, :hermite, :bezier
         HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, outgoing_slope(next_key))
-      when :linear
-        LinearSegment.new(key.frame, next_key.frame, key.value, next_key.value)
       when :constant
         ConstantSegment.new(key.frame, next_key.frame, key.value)
-      else
-        raise "Unknown segment type #{key.interpolation}"
+      else # Linear and safe
+        LinearSegment.new(key.frame, next_key.frame, key.value, next_key.value)
     end
   end
   
