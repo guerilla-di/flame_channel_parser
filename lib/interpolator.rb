@@ -4,6 +4,8 @@ require File.expand_path(File.dirname(__FILE__)) + "/segments"
 # object to the interpolator and you can then sample values at arbitrary
 # frames
 class FlameChannelParser::Interpolator
+  include FlameChannelParser::Segments
+  
   attr_reader :segments
   
   NEG_INF = (-1.0/0.0)

@@ -1,6 +1,6 @@
 require "matrix"
 
-module FlameChannelParser
+module FlameChannelParser::Segments
   
   # This segment just stays on the value of it's keyframe
   class ConstantSegment

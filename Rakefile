@@ -3,8 +3,11 @@
 require 'rubygems'
 require 'hoe'
 
-Hoe.spec 'flame_channel_parser' do
-  developer('Julik Tarkhanov', 'me@julik.nl')
+Hoe.spec 'flame_channel_parser' do | p |
+  p.readme_file   = 'README.rdoc'
+  p.extra_rdoc_files  = FileList['*.rdoc'] + FileList['*.txt']
+  p.developer('Julik Tarkhanov', 'me@julik.nl')
+  p.clean_globs = %w( **/.DS_Store  coverage.info **/*.rbc .idea .yardoc)
 end
 
 # vim: syntax=ruby

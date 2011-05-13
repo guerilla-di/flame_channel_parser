@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 
 D = 0.001
 
-include FlameChannelParser
+include FlameChannelParser::Segments
 
 class TestConstantFunction < Test::Unit::TestCase
   def test_segment
