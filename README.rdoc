@@ -9,7 +9,7 @@ Includes a small library for parsing and baking anmation curves made on Discrode
 == FEATURES/PROBLEMS:
 
 * Currently only supports file versions up to and including 2011
-* Only constant extrapolation for now, no looping or pingpong
+* Only constant extrapolation for now, no looping or pingpong or linear
 
 == SYNOPSIS:
 
@@ -18,12 +18,17 @@ Includes a small library for parsing and baking anmation curves made on Discrode
       FlameChannelParser.parse(f)
     end
     
-    # Find the channel that we are interested in
-    frame_channel = channels.find{|c| c.name == "Frame" }
+    # Find the channel that we are interested in, in this case
+    # this is the "Timing" channel from any Timewarp setup
+    frame_channel = channels.find{|c| c.name == "Timing/Timing" }
     
-    # Now sample from frame 20 to frame 250
+    # Grab the interpolator object for this channel.
+    interpolator = FlameChannelParser::Interpolator.new(frame_channel)
+    
+    # Now sample from frame 20 to frame 250.
+    # You can also sample at fractional frames if you want to.
     (20..250).each do | frame_in_setup |
-      p frame_channel.value_at(frame_in_setup)
+      p interpolator.value_at(frame_in_setup)
     end
     
 == REQUIREMENTS:
