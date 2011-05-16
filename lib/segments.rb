@@ -139,18 +139,3 @@ module FlameChannelParser::Segments
   end
 end
 
-if __FILE__ == $0
-
-  herm = HermiteSegment.new(
-    time_from = 149,
-    time_to = 200,
-    value1 = 258.239,
-    value2 = 0,
-    tangent1 = -0.0149286,
-    tangent2 = -0.302127
-  )
-
-  (149..200).each do | f |
-    puts herm.value_at(f)
-  end
-end
