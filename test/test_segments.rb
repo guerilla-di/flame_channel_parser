@@ -30,6 +30,12 @@ class TestConstantSegment < Test::Unit::TestCase
   end
 end
 
+class TestBezierSegment < Test::Unit::TestCase
+  def test_segment
+    flunk
+  end
+end
+
 class TestLinearSegment < Test::Unit::TestCase
   def test_segment
     seg = LinearSegment.new(12, 25, 2.5, 4.5)

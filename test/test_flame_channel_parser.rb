@@ -67,7 +67,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
     
     last_chan = channels[-1]
     assert_equal "position/y", last_chan.name
-    assert_equal 9, last_chan.length
+    assert_equal 6, last_chan.length
   end
   
 end

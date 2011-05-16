@@ -6,6 +6,10 @@ class FlameChannelParser::Parser2011
     attr_accessor :frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope, :break_slope
     alias_method :to_s, :inspect
     
+    def curve_order
+      :hermite
+    end
+    
     def broken?
       break_slope
     end
@@ -64,7 +68,8 @@ class FlameChannelParser::Parser2011
       Key.new
     end
     
-    INTERPS = [:constant, :linear, :hermite, :natural, ]
+    INTERPS = [:constant, :linear, :hermite, :natural, :bezier]
+    
     def extract_key_from(io)
       frame = nil
       end_matcher = /End/
