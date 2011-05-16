@@ -56,4 +56,18 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_equal 9, last_chan.length
   end
   
+  def test_action_migrated_to_2012
+    f = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example_migrated_to_2012.action")
+    channels = FlameChannelParser.parse(f)
+    
+    assert_kind_of Array, channels
+    assert_equal 65, channels.length, "Should find 65 channels"
+    channels.reject!{|c| c.length < 2 }
+    assert_equal 2, channels.length, "Should have 2 channels with more than 2 keyframes"
+    
+    last_chan = channels[-1]
+    assert_equal "position/y", last_chan.name
+    assert_equal 9, last_chan.length
+  end
+  
 end
