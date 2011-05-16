@@ -68,6 +68,24 @@ class TestInterpolator < Test::Unit::TestCase
     end
   end
   
+  def test_setup_moved_from_2011_to_2012_parses_the_same
+    data = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example.action")
+    data_2012 = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example_migrated_to_2012.action")
+    
+    ref = FlameChannelParser.parse(data).find{|e| e.name == "position/x" && e.length > 12 }
+    sampled = FlameChannelParser.parse(data_2012).find{|e| e.name == "position/y" && e.length > 5 }
+    
+    ref_i, sample_i = [ref, sampled].map{|c| FlameChannelParser::Interpolator.new(c) }
+    
+    value_tuples = (1..200).map do |f|  
+      [f, ref_i.sample_at(f), sample_i.sample_at(f)]
+    end
+    
+    value_tuples.each do | frame, ref, actual |
+      assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
+    end
+  end
+  
   def test_setup_from_2012
     data = File.open(File.dirname(__FILE__) + "/snaps/FLEM_advanced_curve_example_FL2012.action")
     channels_in_action = FlameChannelParser.parse(data)
