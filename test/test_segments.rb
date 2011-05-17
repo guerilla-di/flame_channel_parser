@@ -31,7 +31,6 @@ class TestConstantSegment < Test::Unit::TestCase
 end
 
 class TestBezierSegment < Test::Unit::TestCase
-  D = 0.001
   
   def test_segment
     seg = BezierSegment.new(
@@ -248,8 +247,12 @@ class TestHermiteSegment < Test::Unit::TestCase
 end
 
 class TestLinearPrepolate < Test::Unit::TestCase
-  def test_fail
-    flunk
+  def test_segment
+    seg = LinearPrepolate.new(123, -4, 2)
+    assert seg.defines?(122)
+    assert seg.defines?(-99999)
+    assert_equal( -2, seg.value_at(124))
+    assert_equal( -52, seg.value_at(99))
   end
 end
 
@@ -259,7 +262,7 @@ class TestLinearExtrapolate < Test::Unit::TestCase
     assert seg.defines?(123)
     assert seg.defines?(9999999999)
     assert !seg.defines?(122)
-    assert_equal -2, seg.value_at(124)
+    assert_equal( -2, seg.value_at(124))
     assert_equal 198, seg.value_at(224)
   end
 end

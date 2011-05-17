@@ -29,7 +29,7 @@ class FlameChannelParser::Interpolator
       
       # TODO: extrapolation is set for the whole channel, both begin and end.
       # First the prepolating segment
-      @segments << ConstantPrepolate.new(channel[0].frame, channel[0].value)
+      @segments << pick_prepolation(channel.extrapolation, channel[0])
       
       # The last key defines extrapolation for the rest of the curve...
       channel[0..-2].each_with_index do | key, index |
@@ -37,13 +37,15 @@ class FlameChannelParser::Interpolator
       end
       
       # so we just output it separately
-      @segments << pick_extrap(channel[-1])
+      @segments << pick_extrapolation(channel.extrapolation, channel[-1])
     end
   end
   
   # Sample the value of the animation curve at this frame
   def sample_at(frame)
     segment = @segments.find{|s| s.defines?(frame) }
+    raise "No segment on this curve that can interpolate the value at #{frame}" unless segment
+    
     segment.value_at(frame)
   end
   
@@ -65,15 +67,23 @@ class FlameChannelParser::Interpolator
   
   private
   
-  def pick_extrap(from_key)
-    if from_key.interpolation == :constant
-      ConstantExtrapolate.new(from_key.frame, from_key.value)
+  def pick_prepolation(extrap_symbol, first_key)
+    if extrap_symbol == :linear
+      LinearPrepolate.new(first_key.frame, first_key.value, incoming_slope(first_key))
     else
-      LinearExtrapolate.new(from_key.frame, from_key.value, from_key.right_slope)
+      ConstantPrepolate.new(first_key.frame, first_key.value)
     end
   end
-      
-      
+  
+  def pick_extrapolation(extrap_symbol, last_key)
+    if extrap_symbol == :linear
+      LinearExtrapolate.new(last_key.frame, last_key.value, last_key.right_slope)
+    else
+      ConstantExtrapolate.new(last_key.frame, last_key.value)
+    end
+  end
+  
+  
   # We need both the preceding and the next key
   def key_pair_to_segment(key, next_key)
     case key.interpolation

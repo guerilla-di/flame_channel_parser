@@ -188,11 +188,21 @@ module FlameChannelParser::Segments
     def value_at(frame)
       @value
     end
+  end
   
-    private
-      def frame_increment
-        23.0
-      end
+  # This segment does prepolation with a linear coefficient
+  class LinearPrepolate < LinearSegment
+    def initialize(upto_frame, base_value, tangent)
+      @value = base_value
+      @end_frame = upto_frame
+      @start_frame = NEG_INF
+      @tangent = tangent.to_f
+    end
+    
+    def value_at(frame)
+      frame_diff = (frame - @end_frame)
+      @value + (@tangent * frame_diff)
+    end
   end
   
   # This segment does extrapolation using a constant value

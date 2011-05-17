@@ -30,6 +30,8 @@ class FlameChannelParser::Parser2011
   class ChannelBlock < DelegateClass(Array)
     attr_accessor :base_value
     attr_accessor :name
+    attr_accessor :extrapolation
+    
     def initialize(io, channel_name, parent_parser)
       super([])
       
@@ -38,6 +40,7 @@ class FlameChannelParser::Parser2011
       
       base_value_matcher = /Value ([\-\d\.]+)/
       keyframe_count_matcher = /Size (\d+)/
+      extrapolation_matcher = /Extrapolation (\w+)/
       indent = nil
       
       while line = io.gets
@@ -51,6 +54,8 @@ class FlameChannelParser::Parser2011
           $1.to_i.times { push(extract_key_from(io)) }
         elsif line =~ base_value_matcher && empty?
           self.base_value = $1.to_f
+        elsif line =~ extrapolation_matcher
+          self.extrapolation = symbolize_literal($1)
         elsif line.strip == end_mark
           break
         end
@@ -58,7 +63,12 @@ class FlameChannelParser::Parser2011
       
     end
     
-
+    # Get an Interpolator from this channel
+    def to_interpolator
+      FlameChannelParser::Inteprolator.new(self)
+    end
+    
+    private
     
     def create_key
       Key.new

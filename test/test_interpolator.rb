@@ -89,6 +89,6 @@ class TestInterpolator < Test::Unit::TestCase
     
     reference = channels_in_action.find{|c| c.name == "position/x" && c.length > 2 }
     sampled = channels_in_action.find{|c| c.name == "position/y" && c.length > 2 }
-    assert_same_interpolation(1..330, reference, sampled)
+    assert_same_interpolation(-10..300, reference, sampled)
   end
 end
