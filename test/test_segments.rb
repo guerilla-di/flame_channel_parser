@@ -254,8 +254,13 @@ class TestLinearPrepolate < Test::Unit::TestCase
 end
 
 class TestLinearExtrapolate < Test::Unit::TestCase
-  def test_fail
-    flunk
+  def test_segment
+    seg = LinearExtrapolate.new(123, -4, 2)
+    assert seg.defines?(123)
+    assert seg.defines?(9999999999)
+    assert !seg.defines?(122)
+    assert_equal -2, seg.value_at(124)
+    assert_equal 198, seg.value_at(224)
   end
 end
 
