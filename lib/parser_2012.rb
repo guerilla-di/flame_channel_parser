@@ -1,6 +1,7 @@
 require "delegate"
 require File.dirname(__FILE__) + "/interpolator"
 
+# This parser is automatically used for 2012 setups
 class FlameChannelParser::Parser2012 < FlameChannelParser::Parser2011
 
   class ModernKey
