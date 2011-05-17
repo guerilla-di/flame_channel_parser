@@ -114,18 +114,16 @@ class FlameChannelParser::Parser2011
     until io.eof?
       line = io.gets
       if line =~ CHANNEL_MATCHER && channel_is_useful?($1)
-        report_progress("Extracting channel #{$1}")
         channels << ChannelBlock.new(io, $1, self)
       end
     end
     channels
   end
   
+  # Override this method to skip some channels, this will speedup
+  # your code alot
   def channel_is_useful?(channel_name)
     true
   end
   
-  def report_progress(message)
-    # flunk
-  end
 end
