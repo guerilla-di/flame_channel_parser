@@ -11,8 +11,6 @@ class TestInterpolator < Test::Unit::TestCase
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
     
-    STDERR.puts "Copying two curves to the clipboard..."
-    
     # This is handy for plotting
     IO.popen("pbcopy", "w") do | buf |
       range.map{|f| buf.puts "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
