@@ -31,8 +31,26 @@ class TestConstantSegment < Test::Unit::TestCase
 end
 
 class TestBezierSegment < Test::Unit::TestCase
+  D = 0.001
+  
   def test_segment
-    flunk
+    seg = BezierSegment.new(
+      frame_from = 117,
+      frame_to = 149, 
+      value_from = 1.23907006, 
+      value_to = 258.239014, 
+      handle_left_x = 117.25, 
+      handle_left_y = 4.76008224, 
+      handle_right_x = 138.333328, 
+      handle_right_y = 258.398254
+    )
+    assert seg.defines?(117)
+    assert !seg.defines?(149)
+    assert !seg.defines?(151)
+    assert !seg.defines?(116)
+    
+    assert_in_delta 1.23907006, seg.value_at(25), D
+    assert_in_delta 24.7679917574603, seg.value_at(119), D
   end
 end
 
