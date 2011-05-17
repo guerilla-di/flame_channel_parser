@@ -90,90 +90,90 @@ module FlameChannelParser::Segments
   
   end
   
-  Point = Struct.new(:x, :y)
-  
+  Point = Struct.new(:x, :y, :tanx, :tany)
+
   class BezierSegment < LinearSegment
-    def initialize(from_frame, to_frame, value1, value2, t1x, t1y, t2x, t2y)
-      @start_frame, @end_frame = from_frame, to_frame
-      
-      p1 = Point.new(from_frame, value1)
-      tan1 = Point.new(t1x, t1y)
-      tan2 = Point.new(t2x, t2y)
-      p2 = Point.new(to_frame, value2)
-      
-      @values = curve4(p1, tan1, tan2, p2)
-      puts @values.inspect
+    def initialize(x1, x2, y1, y2, t1x, t1y, t2x, t2y)
+      @start_frame, @end_frame = x1, x2
+
+      @a = Point.new(x1, y1, t1x, t1y)
+      @b = Point.new(x2, y2, t2x, t2y)
     end
-    
+
     def value_at(frame)
-      v = @values.find{|v| v[0] == frame }
-      raise "No definition at #{frame}" unless v
-      v[-1]
+      # Solve T from X. This determines the correlation between X and T.
+      t = approximate_t(frame, @a.x, @a.tanx, @b.tanx, @b.x)
+      vy = bezier(t, @a.y, @a.tany, @b.tany, @b.y)
     end
-    
+
     private
-    
-    # Anchor1, Control1, Control2, Anchor2
-    def curve4(p1, t1, t2, p2)
-        
-        x1, y1 = p1.x, p1.y
-        x2, y2 = t1.x, t1.y
-        x3, y3 = p2.x, p2.y
-        x4, y4 = t2.x, t2.y
-        
-        num_steps = p2.x - p1.x # number of frames
-        
-        dx1 = x2 - x1
-        dy1 = y2 - y1
-        dx2 = x3 - x2
-        dy2 = y3 - y2
-        dx3 = x4 - x3
-        dy3 = y4 - y3
-        
-        subdiv_step  = 1.0 / (num_steps + 1)
-        subdiv_step2 = subdiv_step ** 2
-        subdiv_step3 = subdiv_step ** 3
-        
-        pre1 = 3.0 * subdiv_step
-        pre2 = 3.0 * subdiv_step2
-        pre4 = 6.0 * subdiv_step2
-        pre5 = 6.0 * subdiv_step3
-        
-        tmp1x = x1 - x2 * 2.0 + x3
-        tmp1y = y1 - y2 * 2.0 + y3
-        
-        tmp2x = (x2 - x3)*3.0 - x1 + x4
-        tmp2y = (y2 - y3)*3.0 - y1 + y4
-        
-        fx = x1
-        fy = y1
-        
-        dfx = (x2 - x1)*pre1 + tmp1x*pre2 + tmp2x*subdiv_step3
-        dfy = (y2 - y1)*pre1 + tmp1y*pre2 + tmp2y*subdiv_step3
-        
-        ddfx = tmp1x*pre4 + tmp2x*pre5;
-        ddfy = tmp1y*pre4 + tmp2y*pre5;
-        
-        dddfx = tmp2x*pre5;
-        dddfy = tmp2y*pre5;
-        
-        values = []
-        
-        num_steps.downto(0) do | num |
-            fx   += dfx
-            fy   += dfy
-            dfx  += ddfx
-            dfy  += ddfy
-            ddfx += dddfx
-            ddfy += dddfy
-            values << [fx, fy]
-        end
-        values.each do | x, y |
-          puts "#{x}\t #{y}"
-        end
-        
-        values
-      end
+
+    def bezier(t, a, b, c, d)
+      a + (a*(-3) + b*3)*(t) + (a*3 - b*6 + c*3)*(t**2) + (-a + b*3 - c*3 + d)*(t**3)
+    end
+
+    def clamp(value)
+       return 0.0 if value < 0
+       return 1.0 if value > 1
+       return value
+    end
+
+    # /**
+    # * Returns the approximated parameter of a parametric curve for the value X
+    # * @param atX At which value should the parameter be evaluated
+    # * @param p0x The first interpolation point of a curve segment
+    # * @param c0x The first control point of a curve segment
+    # * @param c1x The second control point of a curve segment
+    # * @param P1_x The second interpolation point of a curve segment
+    # * @return The parametric argument that is used to retrieve atX using the parametric function representation of this curve
+    # */
+
+    APPROXIMATION_EPSILON = 1.0e-09 
+    VERYSMALL = 1.0e-20 
+    MAXIMUM_ITERATIONS = 1000
+
+    # This is how OPENCOLLADA suggests approximating Bezier animation curves
+    # http://www.collada.org/public_forum/viewtopic.php?f=12&t=1132
+    def approximate_t (atX, p0x, c0x, c1x, p1x )
+
+       return 0.0 if (atX - p0x < VERYSMALL)
+       return 1.0 if  (p1x - atX < VERYSMALL)
+
+       u, v = 0.0, 1.0
+
+       #  iteratively apply subdivision to approach value atX
+       MAXIMUM_ITERATIONS.times do
+
+          # de Casteljau Subdivision. 
+          a = (p0x + c0x) / 2.0
+          b = (c0x + c1x) / 2.0 
+          c = (c1x + p1x) / 2.0
+          d = (a + b) / 2.0 
+          e = (b + c) / 2.0 
+          f = (d + e) / 2.0 # this one is on the curve!
+
+          # The curve point is close enough to our wanted atX
+          if ((f - atX).abs < APPROXIMATION_EPSILON) 
+             return clamp((u + v)*0.5)
+          end
+
+          # dichotomy
+          if (f < atX)
+             p0x = f
+             c0x = e 
+             c1x = c 
+             u = (u + v) / 2.0 
+          else
+             c0x = a
+             c1x = d
+             p1x = f
+             v = (u + v) / 2.0 
+          end 
+       end 
+
+       return ClampToZeroOne((u + v) / 2) 
+
+    end
   end
   
   # This segment does prepolation of a constant value

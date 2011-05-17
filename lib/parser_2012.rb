@@ -10,9 +10,9 @@ class FlameChannelParser::Parser2012 < FlameChannelParser::Parser2011
     # Adapter for old interpolation
     def interpolation
       return :constant if @curve_order.to_s == "constant"
-      return :linear if @curve_order.to_s == "linear"
       return :hermite if @curve_order.to_s == "cubic" && (@curve_mode.to_s == "hermite" || @curve_mode.to_s == "natural")
       return :bezier if @curve_order.to_s == "cubic" && @curve_mode.to_s == "bezier"
+      return :linear if @curve_order.to_s == "linear"
       
       raise "Cannot determine interpolation for #{self.inspect}"
     end

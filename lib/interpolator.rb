@@ -68,10 +68,13 @@ class FlameChannelParser::Interpolator
   # We need both the preceding and the next key
   def key_to_segment(key, next_key)
     case key.interpolation
-      #when :bezier
-      #  BezierSegment.new(key.frame, next_key.frame, key.value, next_key.value, 
-      #    key.r_handle_x, key.r_handle_y, key.l_handle_x, key.l_handle_y)
-      when :natural, :hermite, :bezier
+      when :bezier
+        BezierSegment.new(key.frame, next_key.frame,
+          key.value, next_key.value, 
+          key.r_handle_x, 
+          key.r_handle_y, 
+          next_key.l_handle_x, next_key.l_handle_y)
+      when :natural, :hermite
         HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, incoming_slope(next_key))
       when :constant
         ConstantSegment.new(key.frame, next_key.frame, key.value)
