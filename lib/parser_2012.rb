@@ -20,6 +20,8 @@ class FlameChannelParser::Parser2012 < FlameChannelParser::Parser2011
     
     # Compute pre-212 slope which we use for interpolations
     def left_slope
+      return right_slope unless broken?
+      
       dy = value - l_handle_y
       dx = l_handle_x - frame
       dy / dx  * -1

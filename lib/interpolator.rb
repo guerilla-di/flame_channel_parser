@@ -69,7 +69,7 @@ class FlameChannelParser::Interpolator
   
   def pick_prepolation(extrap_symbol, first_key)
     if extrap_symbol == :linear
-      LinearPrepolate.new(first_key.frame, first_key.value, incoming_slope(first_key))
+      LinearPrepolate.new(first_key.frame, first_key.value, first_key.left_slope)
     else
       ConstantPrepolate.new(first_key.frame, first_key.value)
     end
@@ -94,17 +94,12 @@ class FlameChannelParser::Interpolator
           key.r_handle_y, 
           next_key.l_handle_x, next_key.l_handle_y)
       when :natural, :hermite
-        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, incoming_slope(next_key))
+        HermiteSegment.new(key.frame, next_key.frame, key.value, next_key.value, key.right_slope, next_key.left_slope)
       when :constant
         ConstantSegment.new(key.frame, next_key.frame, key.value)
       else # Linear and safe
         LinearSegment.new(key.frame, next_key.frame, key.value, next_key.value)
     end
-  end
-  
-  # Flame uses the right slope for both left and right unless the BrokenSlope tag is set
-  def incoming_slope(key)
-    key.broken? ? key.left_slope : key.right_slope
   end
   
 end

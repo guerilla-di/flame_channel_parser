@@ -1,16 +1,26 @@
 require "delegate"
 
+# Basic parser used for setups from versions up to 2011
 class FlameChannelParser::Parser2011
   
+  # Represents a keyframe
   class Key
     attr_accessor :frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope, :break_slope
     alias_method :to_s, :inspect
     
+    # Unless the key is broken? we should just use the right slope
+    def left_slope
+      return right_slope unless broken?
+      @left_slope
+    end
+    
+    # Tells whether the slope of this keyframe is broken (not smooth)
     def broken?
       break_slope
     end
   end
   
+  # Defines a number of regular expression matchers applied to the file as it is being parsed
   def matchers
     [
       [:frame, :to_i,  /Frame ([\-\d\.]+)/],
@@ -27,6 +37,8 @@ class FlameChannelParser::Parser2011
     Key.new
   end
   
+  # Represents a channel parsed from the Flame setup. Contains
+  # the channel metadata and keyframes
   class ChannelBlock < DelegateClass(Array)
     attr_accessor :base_value
     attr_accessor :name
