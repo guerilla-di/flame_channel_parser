@@ -5,6 +5,13 @@ module FlameChannelParser
   
   # Parse a Flame setup into an array of ChannelBlock objects
   def self.parse(io)
+    parser_class = detect_parser_class_from(io)
+    parser_class.new.parse(io)
+  end
+  
+  private
+  
+  def self.detect_parser_class_from(io)
     # Scan the IO
     parser_class = Parser2011
     until io.eof?
@@ -15,7 +22,8 @@ module FlameChannelParser
       end
     end
     io.rewind
-    parser_class.new.parse(io)
+    
+    return parser_class
   end
 end
 

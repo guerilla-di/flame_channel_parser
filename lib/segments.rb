@@ -23,7 +23,6 @@ module FlameChannelParser::Segments
     def initialize(from_frame, to_frame, value)
       @start_frame = from_frame
       @end_frame = to_frame
-    
       @v1 = value
     end
   end
@@ -95,17 +94,17 @@ module FlameChannelParser::Segments
   class BezierSegment < LinearSegment
     def initialize(x1, x2, y1, y2, t1x, t1y, t2x, t2y)
       @start_frame, @end_frame = x1, x2
-
+      
       @a = Point.new(x1, y1, t1x, t1y)
       @b = Point.new(x2, y2, t2x, t2y)
     end
-
+    
     def value_at(frame)
       # Solve T from X. This determines the correlation between X and T.
       t = approximate_t(frame, @a.x, @a.tanx, @b.tanx, @b.x)
       vy = bezier(t, @a.y, @a.tany, @b.tany, @b.y)
     end
-
+    
     private
     
     # t is the T interpolant (0 < T < 1)
@@ -116,68 +115,65 @@ module FlameChannelParser::Segments
     def bezier(t, a, b, c, d)
       a + (a*(-3) + b*3)*(t) + (a*3 - b*6 + c*3)*(t**2) + (-a + b*3 - c*3 + d)*(t**3)
     end
-
+    
     def clamp(value)
        return 0.0 if value < 0
        return 1.0 if value > 1
        return value
     end
-
-    # /**
-    # * Returns the approximated parameter of a parametric curve for the value X
-    # * @param atX At which value should the parameter be evaluated
-    # * @param p0x The first interpolation point of a curve segment
-    # * @param c0x The first control point of a curve segment
-    # * @param c1x The second control point of a curve segment
-    # * @param P1_x The second interpolation point of a curve segment
-    # * @return The parametric argument that is used to retrieve atX using the parametric function representation of this curve
-    # */
-
+    
+    
     APPROXIMATION_EPSILON = 1.0e-09 
     VERYSMALL = 1.0e-20 
-    MAXIMUM_ITERATIONS = 1000
-
+    MAXIMUM_ITERATIONS = 100
+    
     # This is how OPENCOLLADA suggests approximating Bezier animation curves
     # http://www.collada.org/public_forum/viewtopic.php?f=12&t=1132
+    # Returns the approximated parameter of a parametric curve for the value X
+    # @param atX At which value should the parameter be evaluated
+    # @param p0x The first interpolation point of a curve segment
+    # @param c0x The first control point of a curve segment
+    # @param c1x The second control point of a curve segment
+    # @param P1_x The second interpolation point of a curve segment
+    # @return The parametric argument that is used to retrieve atX using the parametric function representation of this curve
     def approximate_t (atX, p0x, c0x, c1x, p1x )
-
-       return 0.0 if (atX - p0x < VERYSMALL)
-       return 1.0 if  (p1x - atX < VERYSMALL)
-
-       u, v = 0.0, 1.0
-
-       #  iteratively apply subdivision to approach value atX
-       MAXIMUM_ITERATIONS.times do
-
-          # de Casteljau Subdivision. 
-          a = (p0x + c0x) / 2.0
-          b = (c0x + c1x) / 2.0 
-          c = (c1x + p1x) / 2.0
-          d = (a + b) / 2.0 
-          e = (b + c) / 2.0 
-          f = (d + e) / 2.0 # this one is on the curve!
-
-          # The curve point is close enough to our wanted atX
-          if ((f - atX).abs < APPROXIMATION_EPSILON) 
-             return clamp((u + v)*0.5)
-          end
-
-          # dichotomy
-          if (f < atX)
-             p0x = f
-             c0x = e 
-             c1x = c 
-             u = (u + v) / 2.0 
-          else
-             c0x = a
-             c1x = d
-             p1x = f
-             v = (u + v) / 2.0 
-          end 
-       end 
-
-       return ClampToZeroOne((u + v) / 2) 
-
+      
+      return 0.0 if (atX - p0x < VERYSMALL)
+      return 1.0 if  (p1x - atX < VERYSMALL)
+      
+      u, v = 0.0, 1.0
+      
+      #  iteratively apply subdivision to approach value atX
+      MAXIMUM_ITERATIONS.times do
+      
+         # de Casteljau Subdivision. 
+         a = (p0x + c0x) / 2.0
+         b = (c0x + c1x) / 2.0 
+         c = (c1x + p1x) / 2.0
+         d = (a + b) / 2.0 
+         e = (b + c) / 2.0 
+         f = (d + e) / 2.0 # this one is on the curve!
+      
+         # The curve point is close enough to our wanted atX
+         if ((f - atX).abs < APPROXIMATION_EPSILON) 
+            return clamp((u + v)*0.5)
+         end
+      
+         # dichotomy
+         if (f < atX)
+            p0x = f
+            c0x = e 
+            c1x = c 
+            u = (u + v) / 2.0 
+         else
+            c0x = a
+            c1x = d
+            p1x = f
+            v = (u + v) / 2.0 
+         end 
+      end 
+      
+      clamp((u + v) / 2.0) 
     end
   end
   
@@ -209,6 +205,19 @@ module FlameChannelParser::Segments
   
     def value_at(frame)
       @base_value
+    end
+  end
+  
+  # This segment does extrapolation using the tangent from the preceding keyframe
+  class LinearExtrapolate < ConstantExtrapolate
+    def initialize(from_frame, base_value, tangent)
+      super(from_frame, base_value)
+      @tangent = tangent
+    end
+  
+    def value_at(frame)
+      frame_diff = (frame - @start_frame)
+      @base_value + (@tangent * frame_diff)
     end
   end
   

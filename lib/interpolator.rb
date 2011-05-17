@@ -37,7 +37,7 @@ class FlameChannelParser::Interpolator
       end
       
       # so we just output it separately
-      @segments << ConstantExtrapolate.new(@segments[-1].end_frame, channel[-1].value)
+      @segments << pick_extrap(channel[-1])
     end
   end
   
@@ -65,6 +65,15 @@ class FlameChannelParser::Interpolator
   
   private
   
+  def pick_extrap(from_key)
+    if from_key.interpolation == :constant
+      ConstantExtrapolate.new(from_key.frame, from_key.value)
+    else
+      LinearExtrapolate.new(from_key.frame, from_key.value, from_key.right_slope)
+    end
+  end
+      
+      
   # We need both the preceding and the next key
   def key_pair_to_segment(key, next_key)
     case key.interpolation

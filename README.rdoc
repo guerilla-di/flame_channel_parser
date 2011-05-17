@@ -13,6 +13,8 @@ Includes a small library for parsing and baking anmation curves made on Discrode
 
 == SYNOPSIS:
 
+Currently there is no application that you can use directly, the parser is now a library that you can use in your own scripts
+    
     require "flame_channel_parser"
     channels = File.open("TW_Setup.timewarp") do | f |
       FlameChannelParser.parse(f)

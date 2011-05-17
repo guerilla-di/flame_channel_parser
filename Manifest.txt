@@ -10,9 +10,7 @@ lib/parser_2012.rb
 lib/segments.rb
 plots.numbers
 plots_2012.numbers
-test/baked.csv
 test/channel_with_constants.dat
-test/curve.csv
 test/sample_channel.dat
 test/snaps/FLEM_BrokenTangents.action
 test/snaps/FLEM_advanced_curve.png
