@@ -107,7 +107,12 @@ module FlameChannelParser::Segments
     end
 
     private
-
+    
+    # t is the T interpolant (0 < T < 1)
+    # a is the coordinate of the starting vertex
+    # b is the coordinate of the left tangent handle
+    # c is the coordinate of the right tangent handle
+    # d is the coordinate of right vertex
     def bezier(t, a, b, c, d)
       a + (a*(-3) + b*3)*(t) + (a*3 - b*6 + c*3)*(t**2) + (-a + b*3 - c*3 + d)*(t**3)
     end

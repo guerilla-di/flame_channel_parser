@@ -3,7 +3,6 @@ History.txt
 Manifest.txt
 README.rdoc
 Rakefile
-bin/flame_channel_parser
 lib/flame_channel_parser.rb
 lib/interpolator.rb
 lib/parser_2011.rb
@@ -20,7 +19,9 @@ test/snaps/FLEM_advanced_curve.png
 test/snaps/FLEM_advanced_curve_example_FL2012.action
 test/snaps/FLEM_baked_curve.png
 test/snaps/FLEM_curves_example.action
+test/snaps/FLEM_curves_example_migrated_to_2012.action
 test/snaps/FLEM_std_curve.png
+test/snaps/TW.timewarp
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb
 test/test_segments.rb
