@@ -4,20 +4,24 @@ require "stringio"
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 
 class TestInterpolator < Test::Unit::TestCase
-  DELTA = 0.01
+  DELTA = 0.05
   
   def assert_same_interpolation(range, ref_i, sample_i)
     value_tuples = range.map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
     end
     
-    # This is handy for plotting
-    IO.popen("pbcopy", "w") do | buf |
-      range.map{|f| buf.puts "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
-    end
-    
-    value_tuples.each do | frame, ref, actual |
-      assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
+    begin
+      value_tuples.each do | frame, ref, actual |
+        assert_in_delta ref, actual, DELTA, "At #{frame} Interpolated value should be in delta"
+      end
+    rescue Test::Unit::AssertionFailedError => e
+      STDERR.puts "Curves were not the same so I will now copy the two curves to the clipboard"
+      # This is handy for plotting
+      IO.popen("pbcopy", "w") do | buf |
+        range.map{|f| buf.puts "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
+      end
+      raise e
     end
   end
   

@@ -33,7 +33,7 @@ class FlameChannelParser::Interpolator
       
       # The last key defines extrapolation for the rest of the curve...
       channel[0..-2].each_with_index do | key, index |
-        @segments << key_to_segment(key, channel[index + 1])
+        @segments << key_pair_to_segment(key, channel[index + 1])
       end
       
       # so we just output it separately
@@ -66,7 +66,7 @@ class FlameChannelParser::Interpolator
   private
   
   # We need both the preceding and the next key
-  def key_to_segment(key, next_key)
+  def key_pair_to_segment(key, next_key)
     case key.interpolation
       when :bezier
         BezierSegment.new(key.frame, next_key.frame,
