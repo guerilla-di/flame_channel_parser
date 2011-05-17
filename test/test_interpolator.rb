@@ -8,13 +8,17 @@ class TestInterpolator < Test::Unit::TestCase
   
   def send_curves_to_clipboard(range, ref_i, sample_i)
     # This is handy for plotting
-    IO.popen("pbcopy", "w") do | buf |
-      range.map{|f| buf.puts "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
+    begin
+      IO.popen("pbcopy", "w") do | buf |
+        range.map{|f| buf.puts "%03f\t%03f" % [ref_i.sample_at(f), sample_i.sample_at(f)] }
+      end
+    rescue Errno::EPIPE # There is no pbcopy on this box, sorry
     end
   end
   
   def assert_same_interpolation(range, ref_channel, sample_channel)
     ref_i, sample_i = [ref_channel, sample_channel].map{|c| FlameChannelParser::Interpolator.new(c) }
+    send_curves_to_clipboard(range, ref_i, sample_i)
     
     value_tuples = range.map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
