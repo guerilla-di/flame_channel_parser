@@ -5,6 +5,7 @@
 == DESCRIPTION:
 
 Includes a small library for extracting, parsing and baking animation curves made on Discrodesk Floke/Inflinto, also known as flame.
+Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and advice.
 
 == FEATURES/PROBLEMS:
 
@@ -35,11 +36,11 @@ Currently there is no application that you can use directly, the parser is now a
     
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Ruby 1.8.6 and above
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* gem install flame_channel_parser
 
 == LICENSE:
 
