@@ -18,7 +18,6 @@ class TestInterpolator < Test::Unit::TestCase
   
   def assert_same_interpolation(range, ref_channel, sample_channel)
     ref_i, sample_i = [ref_channel, sample_channel].map{|c| FlameChannelParser::Interpolator.new(c) }
-    send_curves_to_clipboard(range, ref_i, sample_i)
     
     value_tuples = range.map do |f|  
       [f, ref_i.sample_at(f), sample_i.sample_at(f)]
