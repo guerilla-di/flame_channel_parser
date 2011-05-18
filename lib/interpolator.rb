@@ -6,11 +6,8 @@ require File.expand_path(File.dirname(__FILE__)) + "/segments"
 #
 #   i = Interpolator.new(parsed_channel)
 #   i.value_at(245.5) # => will interpolate and return the value
-#
 class FlameChannelParser::Interpolator
   include FlameChannelParser::Segments
-  
-  attr_reader :segments
   
   NEG_INF = (-1.0/0.0)
   POS_INF = (1.0/0.0)
@@ -18,20 +15,19 @@ class FlameChannelParser::Interpolator
   # The constructor will accept a ChannelBlock object and convert it internally to a number of
   # segments from which samples can be made
   def initialize(channel)
+    @segments = []
     
     # Edge case - channel has no anim at all
     if (channel.length == 0)
-      @segments = [ConstantFunction.new(channel.base_value)]
+      @segments << [ConstantFunction.new(channel.base_value)]
     elsif (channel.length == 1)
-      @segments = [ConstantFunction.new(channel[0].value)]
+      @segments << [ConstantFunction.new(channel[0].value)]
     else
-      @segments = []
       
-      # TODO: extrapolation is set for the whole channel, both begin and end.
       # First the prepolating segment
       @segments << pick_prepolation(channel.extrapolation, channel[0])
       
-      # The last key defines extrapolation for the rest of the curve...
+      # Then all the intermediate segments, one segment between each pair of keys
       channel[0..-2].each_with_index do | key, index |
         @segments << key_pair_to_segment(key, channel[index + 1])
       end
