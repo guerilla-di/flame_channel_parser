@@ -64,6 +64,7 @@ module FlameChannelParser::Segments
       # CC = {P1, P2, T1, T2}
       p1, p2, t1, t2 = value1, value2, tangent1.to_f * frame_interval, tangent2.to_f * frame_interval
       @hermite = Vector[p1, p2, t1, t2]
+      @basis = HERMATRIX * @hermite
     end
   
     # P[s_] = S[s].h.CC where s is 0..1 float interpolant on T (interval)
@@ -77,7 +78,7 @@ module FlameChannelParser::Segments
       multipliers_vec = Vector[on_t_interval ** 3,  on_t_interval ** 2, on_t_interval ** 1, on_t_interval ** 0]
     
       # P[s_] = S[s].h.CC --> Kaboom!
-      interpolated_scalar = dot_product(HERMATRIX * @hermite, multipliers_vec)
+      interpolated_scalar = dot_product(@basis, multipliers_vec)
     end
   
     private
