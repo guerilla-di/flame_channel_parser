@@ -72,10 +72,10 @@ module FlameChannelParser::Segments
       return @hermite[0] if frame == @start_frame
       
       # Q[frame_] = P[ ( frame - 149 ) / (time_to - time_from)]
-      on_t_interval = (frame - @start_frame).to_f / (@end_frame - @start_frame)
+      t = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     
       # S[s_] = {s^3, s^2, s^1, s^0}
-      multipliers_vec = Vector[on_t_interval ** 3,  on_t_interval ** 2, on_t_interval ** 1, on_t_interval ** 0]
+      multipliers_vec = Vector[t ** 3,  t ** 2, t ** 1, t ** 0]
     
       # P[s_] = S[s].h.CC --> Kaboom!
       interpolated_scalar = dot_product(@basis, multipliers_vec)
