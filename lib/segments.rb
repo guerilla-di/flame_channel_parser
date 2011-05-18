@@ -68,7 +68,8 @@ module FlameChannelParser::Segments
   
     # P[s_] = S[s].h.CC where s is 0..1 float interpolant on T (interval)
     def value_at(frame)
-    
+      return @hermite[0] if frame == @start_frame
+      
       # Q[frame_] = P[ ( frame - 149 ) / (time_to - time_from)]
       on_t_interval = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     
@@ -100,6 +101,8 @@ module FlameChannelParser::Segments
     end
     
     def value_at(frame)
+      return @a.y if frame == @start_frame
+      
       # Solve T from X. This determines the correlation between X and T.
       t = approximate_t(frame, @a.x, @a.tanx, @b.tanx, @b.x)
       vy = bezier(t, @a.y, @a.tany, @b.tany, @b.y)
