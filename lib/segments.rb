@@ -71,6 +71,7 @@ module FlameChannelParser::Segments
     def value_at(frame)
       return @hermite[0] if frame == @start_frame
       
+      # Get the 0 < T < 1 interval we will interpolate on
       # Q[frame_] = P[ ( frame - 149 ) / (time_to - time_from)]
       t = (frame - @start_frame).to_f / (@end_frame - @start_frame)
     
