@@ -94,4 +94,15 @@ class TestInterpolator < Test::Unit::TestCase
     sampled = channels_in_action.find{|c| c.name == "position/y" && c.length > 2 }
     assert_same_interpolation(-10..300, reference, sampled)
   end
+  
+  def test_tw_with_constant
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW_SingleFrameExtrapolated_from2011.timewarp")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
+    
+    interp = chan.to_interpolator
+    assert_in_delta 1, interp.sample_at(1), DELTA
+    assert_in_delta 374.75, interp.sample_at(300), DELTA
+  end
+  
 end

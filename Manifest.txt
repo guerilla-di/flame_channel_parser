@@ -20,6 +20,7 @@ test/snaps/FLEM_curves_example.action
 test/snaps/FLEM_curves_example_migrated_to_2012.action
 test/snaps/FLEM_std_curve.png
 test/snaps/TW.timewarp
+test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb
 test/test_segments.rb

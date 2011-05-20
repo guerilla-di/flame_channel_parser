@@ -1,3 +1,11 @@
+=== 1.2.0 / 2011-05-20
+
+* Ensure single-key channels interpolate correctly
+
+=== 1.1.1 / 2011-05-17
+
+* Added support for 2012 Bezier splines
+
 === 1.1.1 / 2011-05-17
 
 * Added support for 2012 Bezier splines

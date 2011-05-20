@@ -18,10 +18,8 @@ class FlameChannelParser::Interpolator
     @segments = []
     
     # Edge case - channel has no anim at all
-    if (channel.length == 0)
-      @segments << [ConstantFunction.new(channel.base_value)]
-    elsif (channel.length == 1)
-      @segments << [ConstantFunction.new(channel[0].value)]
+    if channel.length.zero?
+      @segments << ConstantFunction.new(channel.base_value)
     else
       
       # First the prepolating segment
