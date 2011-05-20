@@ -39,7 +39,12 @@ class TestFlameChannelParser < Test::Unit::TestCase
     channels.reject!{|c| c.length < 2 }
     assert_equal 2, channels.length, "Should have 2 channels with more than 2 keyframes"
     last_chan = channels[-1]
+    
     assert_equal "position/y", last_chan.name
+    assert_equal "Axis", last_chan.node_type
+    assert_equal "axis1", last_chan.node_name
+    assert_equal "axis1/position/y", last_chan.path
+    
     assert_equal 6, last_chan.length
     i = last_chan.to_interpolator
     assert_kind_of FlameChannelParser::Interpolator, i

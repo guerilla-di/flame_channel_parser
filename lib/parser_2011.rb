@@ -4,14 +4,12 @@ require "delegate"
 class FlameChannelParser::Parser2011
   
   # Represents a keyframe
-  class Key
-    attr_accessor :frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope, :break_slope
-    alias_method :to_s, :inspect
+  class Key < Struct.new(:frame, :value, :interpolation, :extrapolation, :left_slope, :right_slope, :break_slope)
     
     # Unless the key is broken? we should just use the right slope
     def left_slope
       return right_slope unless broken?
-      @left_slope
+      super
     end
     
     # Tells whether the slope of this keyframe is broken (not smooth)
@@ -40,19 +38,24 @@ class FlameChannelParser::Parser2011
   # Represents a channel parsed from the Flame setup. Contains
   # the channel metadata and keyframes
   class ChannelBlock < DelegateClass(Array)
+    attr_reader :node_type
+    attr_reader :node_name
     attr_accessor :base_value
     attr_accessor :name
     attr_accessor :extrapolation
     
-    def initialize(io, channel_name, parent_parser)
+    def initialize(io, channel_name, parent_parser, node_type, node_name)
       super([])
       
+      @node_type = node_type
+      @node_name = node_name
       @parser = parent_parser
       @name = channel_name.strip
       
       base_value_matcher = /Value ([\-\d\.]+)/
       keyframe_count_matcher = /Size (\d+)/
       extrapolation_matcher = /Extrapolation (\w+)/
+      
       indent = nil
       
       while line = io.gets
@@ -73,6 +76,10 @@ class FlameChannelParser::Parser2011
         end
       end
       
+    end
+    
+    def path
+      [@node_name, name].compact.join("/")
     end
     
     # Get an Interpolator from this channel
@@ -120,13 +127,21 @@ class FlameChannelParser::Parser2011
   end
   
   CHANNEL_MATCHER = /Channel (.+)\n/
+  NODE_TYPE_MATCHER = /Node (\w+)/
+  NODE_NAME_MATCHER = /Name (\w+)/
   
   def parse(io)
     channels = []
+    node_name, node_type = nil, nil
+    
     until io.eof?
       line = io.gets
-      if line =~ CHANNEL_MATCHER && channel_is_useful?($1)
-        channels << ChannelBlock.new(io, $1, self)
+      if line =~ NODE_TYPE_MATCHER
+        node_type = $1
+      elsif line =~ NODE_NAME_MATCHER
+        node_name = $1
+      elsif line =~ CHANNEL_MATCHER && channel_is_useful?($1)
+        channels << ChannelBlock.new(io, $1, self, node_type, node_name)
       end
     end
     channels
