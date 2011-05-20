@@ -41,6 +41,8 @@ class TestFlameChannelParser < Test::Unit::TestCase
     last_chan = channels[-1]
     assert_equal "position/y", last_chan.name
     assert_equal 6, last_chan.length
+    i = last_chan.to_interpolator
+    assert_kind_of FlameChannelParser::Interpolator, i
   end
   
   def test_action_from_2012

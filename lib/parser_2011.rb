@@ -77,7 +77,7 @@ class FlameChannelParser::Parser2011
     
     # Get an Interpolator from this channel
     def to_interpolator
-      FlameChannelParser::Inteprolator.new(self)
+      FlameChannelParser::Interpolator.new(self)
     end
     
     private
