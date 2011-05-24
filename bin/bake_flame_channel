@@ -25,3 +25,5 @@ raise "No input file path provided" unless setup_path
 
 FlameChannelParser::Extractor.new.extract(setup_path, options)
 options[:destination].close if options[:destination].respond_to?(:close)
+
+UpdateHints.version_check("flame_channel_parser", FlameChannelParser::VERSION)
