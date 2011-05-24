@@ -13,17 +13,16 @@ module FlameChannelParser
   
   def self.detect_parser_class_from(io)
     # Scan the IO
-    parser_class = Parser2011
     until io.eof?
       str = io.gets
       if str =~ /RHandleX/ # Flame 2012, use that parser
-        parser_class = Parser2012
-        break
+        io.rewind
+        return Parser2012
       end
     end
-    io.rewind
     
-    return parser_class
+    io.rewind
+    Parser2011
   end
 end
 
