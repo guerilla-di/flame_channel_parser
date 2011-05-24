@@ -115,4 +115,36 @@ class TestInterpolator < Test::Unit::TestCase
     assert_in_delta 421, interp.sample_at(20), DELTA
     assert_in_delta 1, interp.sample_at(230), DELTA
   end
+  
+  def test_descending_linear_prepolate_two_KFs
+    data = File.open(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_TwoKFs.timewarp")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
+    
+    interp = chan.to_interpolator
+    assert_in_delta 459, interp.sample_at(1), DELTA
+    assert_in_delta 421, interp.sample_at(20), DELTA
+    assert_in_delta 1, interp.sample_at(230), DELTA
+    assert_in_delta -39, interp.sample_at(250), DELTA
+  end
+  
+  def test_descending_linear_prepolate_two_KFs_different_slope
+    data = File.open(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_TwoKFs_AnotherSlope.timewarp")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
+    
+    interp = chan.to_interpolator
+    assert_in_delta 379, interp.sample_at(41), DELTA
+    assert_in_delta 505.138, interp.sample_at(1), DELTA
+  end
+  
+  def test_descending_linear_prepolate_hermite
+    data = File.open(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_TwoKFs_HermiteAtBegin.timewarp")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
+    
+    interp = chan.to_interpolator
+    assert_in_delta 379, interp.sample_at(41), DELTA
+    assert_in_delta 683.772, interp.sample_at(1), DELTA
+  end
 end

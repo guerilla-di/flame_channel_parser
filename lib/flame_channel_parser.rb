@@ -1,7 +1,7 @@
 require "delegate"
 
 module FlameChannelParser
-  VERSION = '1.2.0'
+  VERSION = '1.2.1'
   
   # Parse a Flame setup into an array of ChannelBlock objects
   def self.parse(io)
@@ -31,4 +31,3 @@ require File.expand_path(File.dirname(__FILE__)) + "/parser_2011"
 require File.expand_path(File.dirname(__FILE__)) + "/parser_2012"
 require File.expand_path(File.dirname(__FILE__)) + "/segments"
 require File.expand_path(File.dirname(__FILE__)) + "/interpolator"
-require File.expand_path(File.dirname(__FILE__)) + "/extractor"

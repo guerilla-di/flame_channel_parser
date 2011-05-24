@@ -8,8 +8,6 @@ lib/interpolator.rb
 lib/parser_2011.rb
 lib/parser_2012.rb
 lib/segments.rb
-plots.numbers
-plots_2012.numbers
 test/channel_with_constants.dat
 test/sample_channel.dat
 test/snaps/FLEM_BrokenTangents.action
@@ -19,6 +17,11 @@ test/snaps/FLEM_baked_curve.png
 test/snaps/FLEM_curves_example.action
 test/snaps/FLEM_curves_example_migrated_to_2012.action
 test/snaps/FLEM_std_curve.png
+test/snaps/RefT_Steadicam.timewarp
+test/snaps/RefT_Steadicam_Baked.timewarp
+test/snaps/RefT_Steadicam_TwoKFs.timewarp
+test/snaps/RefT_Steadicam_TwoKFs_AnotherSlope.timewarp
+test/snaps/RefT_Steadicam_TwoKFs_HermiteAtBegin.timewarp
 test/snaps/TW.timewarp
 test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
 test/test_flame_channel_parser.rb

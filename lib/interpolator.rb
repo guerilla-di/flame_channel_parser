@@ -23,7 +23,7 @@ class FlameChannelParser::Interpolator
     else
       
       # First the prepolating segment
-      @segments << pick_prepolation(channel.extrapolation, channel[0])
+      @segments << pick_prepolation(channel.extrapolation, channel[0], channel[1])
       
       # Then all the intermediate segments, one segment between each pair of keys
       channel[0..-2].each_with_index do | key, index |
@@ -61,9 +61,16 @@ class FlameChannelParser::Interpolator
   
   private
   
-  def pick_prepolation(extrap_symbol, first_key)
-    if extrap_symbol == :linear
-      LinearPrepolate.new(first_key.frame, first_key.value, first_key.left_slope)
+  def pick_prepolation(extrap_symbol, first_key, second_key)
+    if extrap_symbol == :linear && second_key
+      if first_key.interpolation != :linear
+        LinearPrepolate.new(first_key.frame, first_key.value, first_key.left_slope)
+      else
+        # For linear keys the tangent actually does not do anything, so we need to look a frame
+        # ahead and compute the increment
+        increment = (second_key.value - first_key.value) / (second_key.frame - first_key.frame)
+        LinearPrepolate.new(first_key.frame, first_key.value, increment)
+      end
     else
       ConstantPrepolate.new(first_key.frame, first_key.value)
     end

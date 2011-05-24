@@ -202,6 +202,7 @@ module FlameChannelParser::Segments
       @end_frame = upto_frame
       @start_frame = NEG_INF
       @tangent = tangent.to_f
+      
     end
     
     def value_at(frame)

@@ -37,7 +37,7 @@ class FlameChannelParser::Parser2011
   
   # Represents a channel parsed from the Flame setup. Contains
   # the channel metadata and keyframes
-  class ChannelBlock < DelegateClass(Array)
+  class Channel < DelegateClass(Array)
     attr_reader :node_type
     attr_reader :node_name
     attr_accessor :base_value
@@ -141,7 +141,7 @@ class FlameChannelParser::Parser2011
       elsif line =~ NODE_NAME_MATCHER
         node_name = $1
       elsif line =~ CHANNEL_MATCHER && channel_is_useful?($1)
-        channels << ChannelBlock.new(io, $1, self, node_type, node_name)
+        channels << Channel.new(io, $1, self, node_type, node_name)
       end
     end
     channels
