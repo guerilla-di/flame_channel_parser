@@ -3,6 +3,8 @@ History.txt
 Manifest.txt
 README.rdoc
 Rakefile
+bin/bake_flame_channel
+lib/extractor.rb
 lib/flame_channel_parser.rb
 lib/interpolator.rb
 lib/parser_2011.rb
@@ -19,11 +21,14 @@ test/snaps/FLEM_curves_example_migrated_to_2012.action
 test/snaps/FLEM_std_curve.png
 test/snaps/RefT_Steadicam.timewarp
 test/snaps/RefT_Steadicam_Baked.timewarp
+test/snaps/RefT_Steadicam_Extraction.txt
+test/snaps/RefT_Steadicam_Extraction_F19_to_347.txt
 test/snaps/RefT_Steadicam_TwoKFs.timewarp
 test/snaps/RefT_Steadicam_TwoKFs_AnotherSlope.timewarp
 test/snaps/RefT_Steadicam_TwoKFs_HermiteAtBegin.timewarp
 test/snaps/TW.timewarp
 test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
+test/test_extractor.rb
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb
 test/test_segments.rb
