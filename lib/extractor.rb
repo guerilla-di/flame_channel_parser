@@ -3,17 +3,21 @@ class FlameChannelParser::Extractor
   
   DEFAULTS = {:destination => $stdout, :start_frame => nil, :end_frame => nil, :channel => "Timing/Timing" }
   
+  # Raised when a channel is not found in the setup file
+  class ChannelNotFoundError < RuntimeError
+  end
+  
   # Pass the path to Flame setup here and you will get the timewarp curve on STDOUT
-  def extract(path, options = {})
+  def self.extract(path, options = {})
     options = DEFAULTS.merge(options)
     File.open(path) do | f |
       channels = FlameChannelParser.parse(f)
       selected_channel = channels.find{|c| options[:channel] == c.name }
       unless selected_channel
-        message = "Channel not #{option[:channel]}found in this setup (set the channel with the --channel option). Found other channels though:" 
+        message = "Channel not #{options[:channel]}found in this setup (set the channel with the --channel option). Found other channels though:" 
         message << "\n"
         message += channels.map{|c| c.name }.join("\n")
-        raise message
+        raise ChannelNotFoundError, message
       end
       
       write_channel(selected_channel, options[:destination], options[:start_frame], options[:end_frame])
@@ -22,7 +26,7 @@ class FlameChannelParser::Extractor
   
   private
   
-  def write_channel(channel, to_io, start_frame, end_frame)
+  def self.write_channel(channel, to_io, start_frame, end_frame)
     interpolator = FlameChannelParser::Interpolator.new(channel)
     
     from_frame = start_frame || interpolator.first_defined_frame
