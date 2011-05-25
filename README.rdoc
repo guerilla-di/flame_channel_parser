@@ -14,9 +14,15 @@ Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and ad
 
 == SYNOPSIS:
 
-Currently there is no application that you can use directly, the parser is now a library that you can use in your own scripts
+To just bake a specific channel, use the bake_flame_channel binary.
+
+    bake_flame_channel --channel \"Timing/Timing\" -e 123 /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
+
+To use the library:
     
     require "flame_channel_parser"
+    
+    # Parse the setup into channels
     channels = File.open("TW_Setup.timewarp") do | f |
       FlameChannelParser.parse(f)
     end
