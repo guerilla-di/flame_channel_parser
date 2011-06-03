@@ -1,3 +1,7 @@
+=== 1.3.1 / 2011-05-30
+
+* Add minor fixes and imporvements to the curve extraction bin
+
 === 1.3.0 / 2011-05-20
 
 * Added the Extractor class that does simple per-frame baking to STDOUT

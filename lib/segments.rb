@@ -1,6 +1,8 @@
 require "matrix"
 
-module FlameChannelParser::Segments
+
+# :nodoc:
+module FlameChannelParser::Segments 
   
   # This segment just stays on the value of it's keyframe
   class ConstantSegment
@@ -92,14 +94,14 @@ module FlameChannelParser::Segments
   
   end
   
-  Point = Struct.new(:x, :y, :tanx, :tany)
-
   class BezierSegment < LinearSegment
+    Pt = Struct.new(:x, :y, :tanx, :tany)
+    
     def initialize(x1, x2, y1, y2, t1x, t1y, t2x, t2y)
       @start_frame, @end_frame = x1, x2
       
-      @a = Point.new(x1, y1, t1x, t1y)
-      @b = Point.new(x2, y2, t2x, t2y)
+      @a = Pt.new(x1, y1, t1x, t1y)
+      @b = Pt.new(x2, y2, t2x, t2y)
     end
     
     def value_at(frame)
@@ -254,3 +256,4 @@ module FlameChannelParser::Segments
   end
 end
 
+# :nodoc:
