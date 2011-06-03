@@ -34,6 +34,12 @@ class TestExtractor < Test::Unit::TestCase
     assert_equal File.read(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_Extraction_F19_to_347.txt"), io.string
   end
   
+  def test_constant_channels_need_domain_of_definition_on_time
+    assert_raise(FlameChannelParser::Extractor::NoKeyframesError) do
+      FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", :channel => "Mix/Mix")
+    end
+  end
+  
   def test_raises_on_Missing_channel
     assert_raise(FlameChannelParser::Extractor::ChannelNotFoundError) do
       FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", :channel => "foo/bar")
