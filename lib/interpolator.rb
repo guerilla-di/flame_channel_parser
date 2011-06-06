@@ -70,11 +70,11 @@ class FlameChannelParser::Interpolator
     anchor_frame = (frame < first_defined_frame) ? first_defined_frame : last_defined_frame
     frame_within_loop = (frame - anchor_frame) % animated_across
     
-    backwards = (frame - last_defined_frame)
-    if backwards
-      last_defined_frame - frame_within_loop
-    else
+    coeff = ((frame - first_defined_frame) / animated_across).abs
+    if (coeff % 2).zero?
       first_defined_frame + frame_within_loop
+    else
+      last_defined_frame - frame_within_loop
     end
   end
   
