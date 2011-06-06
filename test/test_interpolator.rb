@@ -179,7 +179,7 @@ class TestInterpolator < Test::Unit::TestCase
     
     # We use a bigger delta since extrapolations can create BIG jumps
     # in the function
-    assert_same_interpolation(1..400, chan_baked, chan, delta = 31)
+    assert_same_interpolation(1..400, chan_baked, chan, delta = 1)
   end
   
 end
