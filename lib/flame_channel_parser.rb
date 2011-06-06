@@ -1,7 +1,7 @@
 require "delegate"
 
 module FlameChannelParser
-  VERSION = '1.3.2'
+  VERSION = '1.4.0'
   
   # Parse a Flame setup into an array of ChannelBlock objects
   def self.parse(io)

@@ -9,7 +9,7 @@ Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and ad
 
 == FEATURES/PROBLEMS:
 
-* No pingpong or loop extrapolation for now
+* All extrapolation and interpolation methods are supported (yes two keyframes with tangents across 2000 frames will do!)
 * Expressions on channels won't be evaluated (obviously!)
 
 == SYNOPSIS:

@@ -1,4 +1,8 @@
-=== 1.3.2 / 2011-05-30
+=== 1.4.0 / 2011-06-06
+
+* Implement cycle and reverse-cycle extrapolation
+
+=== 1.3.2 / 2011-06-06
 
 * Fix linear extrapolation occurring after linear keyframes, enforce the tangent/increment of zero for linear extrap. segments
 
