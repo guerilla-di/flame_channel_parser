@@ -12,6 +12,7 @@ lib/parser_2012.rb
 lib/segments.rb
 test/channel_with_constants.dat
 test/sample_channel.dat
+test/snaps/Cycle_and_revcycle.action
 test/snaps/FLEM_BrokenTangents.action
 test/snaps/FLEM_advanced_curve.png
 test/snaps/FLEM_advanced_curve_example_FL2012.action
@@ -28,6 +29,7 @@ test/snaps/RefT_Steadicam_TwoKFs_AnotherSlope.timewarp
 test/snaps/RefT_Steadicam_TwoKFs_HermiteAtBegin.timewarp
 test/snaps/TW.timewarp
 test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
+test/snaps/timewarp_where_interp_fails_at_end.timewarp
 test/test_extractor.rb
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb
