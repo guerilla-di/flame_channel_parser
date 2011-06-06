@@ -118,7 +118,7 @@ class FlameChannelParser::Parser2011
       raise "Did not detect any keyframes!"
     end
     
-    LITERALS = %w( linear constant natural hermite cubic bezier)
+    LITERALS = %w( linear constant natural hermite cubic bezier cycle revcycle )
     
     def symbolize_literal(v)
       LITERALS.include?(v) ? v.to_sym : v

@@ -16,7 +16,7 @@ class TestInterpolator < Test::Unit::TestCase
     end
   end
   
-  def assert_same_interpolation(range, ref_channel, sample_channel)
+  def assert_same_interpolation(range, ref_channel, sample_channel, custom_delta = DELTA)
     ref_i, sample_i = [ref_channel, sample_channel].map{|c| FlameChannelParser::Interpolator.new(c) }
     
     value_tuples = range.map do |f|  
@@ -25,7 +25,7 @@ class TestInterpolator < Test::Unit::TestCase
     
     begin
       value_tuples.each do | frame, ref, actual |
-        assert_in_delta ref, actual, DELTA, "At #{frame} interpolated value should be in delta"
+        assert_in_delta ref, actual, custom_delta, "At #{frame} interpolated value should be in delta"
       end
     rescue Test::Unit::AssertionFailedError => e
       STDERR.puts "Curves were not the same so I will now copy the two curves to the clipboard"
@@ -158,4 +158,28 @@ class TestInterpolator < Test::Unit::TestCase
     assert_in_delta 379, interp.sample_at(41), DELTA
     assert_in_delta 683.772, interp.sample_at(1), DELTA
   end
+  
+  
+  def test_cycle_extrapolation
+    data = File.open(File.dirname(__FILE__) + "/snaps/Cycle_and_revcycle.action")
+    channels_in_ac = FlameChannelParser.parse(data)
+    chan = channels_in_ac.find{|c| c.path == "axis1_Cycle/position/y"}
+    chan_baked = channels_in_ac.find{|c| c.path == "axis1_Cycle/position/x"}
+    
+    # We use a bigger delta since extrapolations can create BIG jumps
+    # in the function
+    assert_same_interpolation(1..400, chan_baked, chan, delta = 36)
+  end
+  
+  def test_cycle_and_rev_extrapolation
+    data = File.open(File.dirname(__FILE__) + "/snaps/Cycle_and_revcycle.action")
+    channels_in_ac = FlameChannelParser.parse(data)
+    chan = channels_in_ac.find{|c| c.path == "axis1_Revcycle/position/y"}
+    chan_baked = channels_in_ac.find{|c| c.path == "axis1_Revcycle/position/x"}
+    
+    # We use a bigger delta since extrapolations can create BIG jumps
+    # in the function
+    assert_same_interpolation(1..400, chan_baked, chan, delta = 31)
+  end
+  
 end

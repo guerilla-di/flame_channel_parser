@@ -38,21 +38,13 @@ class FlameChannelParser::Interpolator
   
   # Sample the value of the animation curve at this frame
   def sample_at(frame)
-    # No test files present for now so we turn this off
-    # if [:cycle, :rev_cycle].include?(frame)
-    #   # Recompute the frame number and retry
-    #   unless frame >= first_defined_frame && frame <= last_defined_frame 
-    #     animated_on = (last_defined_frame - first_defined_frame)
-    #     fdiff = if frame < first_defined_frame
-    #       (first_defined_frame - frame) % animated_on
-    #     else
-    #       (frame - last_defined_frame) % animated_on
-    #     end
-    #     sample_from_segments(first_defined_frame + fdiff)
-    #   end
-    # end
-    
-    sample_from_segments(frame)
+    if :cycle == @extrap
+      return sample_from_segments(frame_number_in_cycle(frame))
+    elsif :revcycle == @extrap
+      return sample_from_segments(frame_number_in_revcycle(frame))
+    else
+      sample_from_segments(frame)
+    end
   end
   
   # Returns the first frame number that is concretely defined as a keyframe
@@ -72,6 +64,26 @@ class FlameChannelParser::Interpolator
   end
   
   private
+  
+  def frame_number_in_revcycle(frame)
+    animated_across = (last_defined_frame - first_defined_frame)
+    anchor_frame = (frame < first_defined_frame) ? first_defined_frame : last_defined_frame
+    frame_within_loop = (frame - anchor_frame) % animated_across
+    
+    backwards = (frame - last_defined_frame)
+    if backwards
+      last_defined_frame - frame_within_loop
+    else
+      first_defined_frame + frame_within_loop
+    end
+  end
+  
+  def frame_number_in_cycle(frame)
+    animated_across = (last_defined_frame - first_defined_frame)
+    anchor_frame = (frame < first_defined_frame) ? first_defined_frame : last_defined_frame
+    frame_within_loop = (frame - anchor_frame) % animated_across
+    first_defined_frame + frame_within_loop
+  end
   
   def sample_from_segments(at_frame)
     segment = @segments.find{|s| s.defines?(at_frame) }
