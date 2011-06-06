@@ -1,11 +1,9 @@
 require "matrix"
 
-
-# :nodoc:
-module FlameChannelParser::Segments 
+module FlameChannelParser::Segments #:nodoc:
   
   # This segment just stays on the value of it's keyframe
-  class ConstantSegment
+  class ConstantSegment #:nodoc:
   
     NEG_INF = (-1.0/0.0)
     POS_INF = (1.0/0.0)
@@ -30,7 +28,7 @@ module FlameChannelParser::Segments
   end
   
   # This segment linearly interpolates
-  class LinearSegment < ConstantSegment
+  class LinearSegment < ConstantSegment #:nodoc:
   
     def initialize(from_frame, to_frame, value1, value2)
       @vint = (value2 - value1)
@@ -46,7 +44,7 @@ module FlameChannelParser::Segments
   
   # This segment does Hermite interpolation
   # using the Flame algo.
-  class HermiteSegment < LinearSegment
+  class HermiteSegment < LinearSegment #:nodoc:
   
     # In Ruby matrix columns are arrays, so here we go
     HERMATRIX = Matrix[
@@ -94,7 +92,7 @@ module FlameChannelParser::Segments
   
   end
   
-  class BezierSegment < LinearSegment
+  class BezierSegment < LinearSegment #:nodoc:
     Pt = Struct.new(:x, :y, :tanx, :tany)
     
     def initialize(x1, x2, y1, y2, t1x, t1y, t2x, t2y)
@@ -185,7 +183,7 @@ module FlameChannelParser::Segments
   end
   
   # This segment does prepolation of a constant value
-  class ConstantPrepolate < LinearSegment
+  class ConstantPrepolate < LinearSegment #:nodoc:
     def initialize(upto_frame, base_value)
       @value = base_value
       @end_frame = upto_frame
@@ -198,13 +196,12 @@ module FlameChannelParser::Segments
   end
   
   # This segment does prepolation with a linear coefficient
-  class LinearPrepolate < LinearSegment
+  class LinearPrepolate < LinearSegment #:nodoc:
     def initialize(upto_frame, base_value, tangent)
       @value = base_value
       @end_frame = upto_frame
       @start_frame = NEG_INF
       @tangent = tangent.to_f
-      
     end
     
     def value_at(frame)
@@ -214,7 +211,7 @@ module FlameChannelParser::Segments
   end
   
   # This segment does extrapolation using a constant value
-  class ConstantExtrapolate < LinearSegment
+  class ConstantExtrapolate < LinearSegment #:nodoc:
     def initialize(from_frame, base_value)
       @start_frame = from_frame
       @base_value = base_value
@@ -227,10 +224,10 @@ module FlameChannelParser::Segments
   end
   
   # This segment does extrapolation using the tangent from the preceding keyframe
-  class LinearExtrapolate < ConstantExtrapolate
+  class LinearExtrapolate < ConstantExtrapolate #:nodoc:
     def initialize(from_frame, base_value, tangent)
       super(from_frame, base_value)
-      @tangent = tangent
+      @tangent = tangent.to_f
     end
   
     def value_at(frame)
@@ -240,7 +237,7 @@ module FlameChannelParser::Segments
   end
   
   # This can be used for an anim curve that stays constant all along
-  class ConstantFunction < ConstantSegment
+  class ConstantFunction < ConstantSegment #:nodoc:
   
     def defines?(frame)
       true
@@ -255,5 +252,3 @@ module FlameChannelParser::Segments
     end
   end
 end
-
-# :nodoc:

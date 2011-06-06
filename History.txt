@@ -1,3 +1,7 @@
+=== 1.3.2 / 2011-05-30
+
+* Fix linear extrapolation occurring after linear keyframes, enforce the tangent/increment of zero for linear extrap. segments
+
 === 1.3.1 / 2011-05-30
 
 * Add minor fixes and imporvements to the curve extraction bin

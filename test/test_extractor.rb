@@ -22,9 +22,17 @@ class TestExtractor < Test::Unit::TestCase
     io = StringIO.new
     ops = {:destination => io, :channel => "axis1/position/y"}
     FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/FLEM_curves_example_migrated_to_2012.action", ops)
-    assert_match /12	-101.80433/, io.string
+    line_re = /12	-101.80433/
+    assert_match line_re , io.string
   end
   
+  def test_extraction_succeeds_for_tw_with_odd_end
+    io = StringIO.new
+    ops = {:start_frame => 1, :end_frame => 504, :destination => io, :channel => "Timing/Timing"}
+    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/timewarp_where_interp_fails_at_end.timewarp", ops)
+    line_re = /1\t-7.00000\n2\t-6.00000/
+    assert_match line_re , io.string
+  end
   
   def test_frame_overrides
     io = StringIO.new

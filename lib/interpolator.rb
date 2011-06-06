@@ -16,6 +16,7 @@ class FlameChannelParser::Interpolator
   # segments from which samples can be made
   def initialize(channel)
     @segments = []
+    @extrap = channel.extrapolation
     
     # Edge case - channel has no anim at all
     if channel.length.zero?
@@ -31,16 +32,27 @@ class FlameChannelParser::Interpolator
       end
       
       # so we just output it separately
-      @segments << pick_extrapolation(channel.extrapolation, channel[-1])
+      @segments << pick_extrapolation(channel.extrapolation, channel[-2], channel[-1])
     end
   end
   
   # Sample the value of the animation curve at this frame
   def sample_at(frame)
-    segment = @segments.find{|s| s.defines?(frame) }
-    raise "No segment on this curve that can interpolate the value at #{frame}" unless segment
+    # No test files present for now so we turn this off
+    # if [:cycle, :rev_cycle].include?(frame)
+    #   # Recompute the frame number and retry
+    #   unless frame >= first_defined_frame && frame <= last_defined_frame 
+    #     animated_on = (last_defined_frame - first_defined_frame)
+    #     fdiff = if frame < first_defined_frame
+    #       (first_defined_frame - frame) % animated_on
+    #     else
+    #       (frame - last_defined_frame) % animated_on
+    #     end
+    #     sample_from_segments(first_defined_frame + fdiff)
+    #   end
+    # end
     
-    segment.value_at(frame)
+    sample_from_segments(frame)
   end
   
   # Returns the first frame number that is concretely defined as a keyframe
@@ -61,6 +73,12 @@ class FlameChannelParser::Interpolator
   
   private
   
+  def sample_from_segments(at_frame)
+    segment = @segments.find{|s| s.defines?(at_frame) }
+    raise "No segment on this curve that can interpolate the value at #{frame}" unless segment
+    segment.value_at(at_frame)
+  end
+  
   def pick_prepolation(extrap_symbol, first_key, second_key)
     if extrap_symbol == :linear && second_key
       if first_key.interpolation != :linear
@@ -76,9 +94,16 @@ class FlameChannelParser::Interpolator
     end
   end
   
-  def pick_extrapolation(extrap_symbol, last_key)
+  def pick_extrapolation(extrap_symbol, previous_key, last_key)
     if extrap_symbol == :linear
-      LinearExtrapolate.new(last_key.frame, last_key.value, last_key.right_slope)
+      if previous_key && last_key.interpolation == :linear
+        # For linear keys the tangent actually does not do anything, so we need to look a frame
+        # ahead and compute the increment
+        increment = (last_key.value - previous_key.value) / (last_key.frame - previous_key.frame)
+        LinearExtrapolate.new(last_key.frame, last_key.value, increment)
+      else
+        LinearExtrapolate.new(last_key.frame, last_key.value, last_key.right_slope)
+      end
     else
       ConstantExtrapolate.new(last_key.frame, last_key.value)
     end

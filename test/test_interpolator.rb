@@ -116,6 +116,17 @@ class TestInterpolator < Test::Unit::TestCase
     assert_in_delta 1, interp.sample_at(230), DELTA
   end
   
+  def test_ascending_linear_extrapolation_on_baked_curve
+    data = File.open(File.dirname(__FILE__) + "/snaps/timewarp_where_interp_fails_at_end.timewarp")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
+    interp = chan.to_interpolator
+    assert_in_delta -7, interp.sample_at(1), DELTA
+    assert_in_delta 492, interp.sample_at(502), DELTA
+    assert_in_delta 492, interp.sample_at(502), DELTA
+    assert_in_delta 494, interp.sample_at(504), DELTA
+  end
+  
   def test_descending_linear_prepolate_two_KFs
     data = File.open(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_TwoKFs.timewarp")
     channels_in_tw = FlameChannelParser.parse(data)
@@ -125,7 +136,7 @@ class TestInterpolator < Test::Unit::TestCase
     assert_in_delta 459, interp.sample_at(1), DELTA
     assert_in_delta 421, interp.sample_at(20), DELTA
     assert_in_delta 1, interp.sample_at(230), DELTA
-    assert_in_delta -39, interp.sample_at(250), DELTA
+    assert_in_delta( -39, interp.sample_at(250), DELTA)
   end
   
   def test_descending_linear_prepolate_two_KFs_different_slope
