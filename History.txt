@@ -1,3 +1,7 @@
+=== 2.0.0 / 2011-08-06
+
+* Remove most of the Array methods from the Channel object
+
 === 1.4.0 / 2011-06-06
 
 * Implement cycle and reverse-cycle extrapolation
@@ -6,11 +10,11 @@
 
 * Fix linear extrapolation occurring after linear keyframes, enforce the tangent/increment of zero for linear extrap. segments
 
-=== 1.3.1 / 2011-05-30
+=== 1.3.1 / 2011-30-05
 
 * Add minor fixes and imporvements to the curve extraction bin
 
-=== 1.3.0 / 2011-05-20
+=== 1.3.0 / 2011-20-05
 
 * Added the Extractor class that does simple per-frame baking to STDOUT
 * Add bake_flame_channel binary
