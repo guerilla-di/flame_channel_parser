@@ -121,7 +121,7 @@ class TestInterpolator < Test::Unit::TestCase
     channels_in_tw = FlameChannelParser.parse(data)
     chan = channels_in_tw.find{|c| c.name == "Timing/Timing"}
     interp = chan.to_interpolator
-    assert_in_delta -7, interp.sample_at(1), DELTA
+    assert_in_delta( -7, interp.sample_at(1), DELTA)
     assert_in_delta 492, interp.sample_at(502), DELTA
     assert_in_delta 492, interp.sample_at(502), DELTA
     assert_in_delta 494, interp.sample_at(504), DELTA

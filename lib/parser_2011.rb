@@ -1,4 +1,4 @@
-require "delegate"
+require "forwardable"
 
 # Basic parser used for setups from versions up to 2011
 class FlameChannelParser::Parser2011
@@ -37,15 +37,18 @@ class FlameChannelParser::Parser2011
   
   # Represents a channel parsed from the Flame setup. Contains
   # the channel metadata and keyframes
-  class Channel < DelegateClass(Array)
-    attr_reader :node_type
-    attr_reader :node_name
-    attr_accessor :base_value
-    attr_accessor :name
-    attr_accessor :extrapolation
+  class Channel
+    include Enumerable
+    extend Forwardable
+    
+    attr_reader :node_type, :node_name
+    attr_accessor :base_value, :name, :extrapolation
+    
+    def_delegators :@keys, :empty?, :size, :each, :[]
+    alias_method :length, :size
     
     def initialize(io, channel_name, parent_parser, node_type, node_name)
-      super([])
+      @keys = []
       
       @node_type = node_type
       @node_name = node_name
@@ -66,7 +69,7 @@ class FlameChannelParser::Parser2011
         end
         
         if line =~ keyframe_count_matcher
-          $1.to_i.times { push(extract_key_from(io)) }
+          $1.to_i.times { @keys.push(extract_key_from(io)) }
         elsif line =~ base_value_matcher && empty?
           self.base_value = $1.to_f
         elsif line =~ extrapolation_matcher

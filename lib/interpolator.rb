@@ -19,7 +19,7 @@ class FlameChannelParser::Interpolator
     @extrap = channel.extrapolation
     
     # Edge case - channel has no anim at all
-    if channel.length.zero?
+    if channel.size.zero?
       @segments << ConstantFunction.new(channel.base_value)
     else
       
