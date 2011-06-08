@@ -81,11 +81,12 @@ class FlameChannelParser::Parser2011
       
     end
     
+    # Returns path to the channel (like axis1/position/x)
     def path
       [@node_name, name].compact.join("/")
     end
     
-    # Get an Interpolator from this channel
+    # Get an Interpolator for this channel
     def to_interpolator
       FlameChannelParser::Interpolator.new(self)
     end
