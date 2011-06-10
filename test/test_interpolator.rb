@@ -159,7 +159,6 @@ class TestInterpolator < Test::Unit::TestCase
     assert_in_delta 683.772, interp.sample_at(1), DELTA
   end
   
-  
   def test_cycle_extrapolation
     data = File.open(File.dirname(__FILE__) + "/snaps/Cycle_and_revcycle.action")
     channels_in_ac = FlameChannelParser.parse(data)

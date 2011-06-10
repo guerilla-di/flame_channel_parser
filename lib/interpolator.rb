@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__)) + "/segments"
 # frames.
 #
 #   i = Interpolator.new(parsed_channel)
-#   i.value_at(245.5) # => will interpolate and return the value
+#   i.value_at(245.5) # => will interpolate and return the value at frame 245.5
 class FlameChannelParser::Interpolator
   include FlameChannelParser::Segments
   
@@ -70,22 +70,22 @@ class FlameChannelParser::Interpolator
   
   def frame_number_in_revcycle(frame)
     animated_across = (last_defined_frame - first_defined_frame)
-    anchor_frame = (frame < first_defined_frame) ? first_defined_frame : last_defined_frame
-    frame_within_loop = (frame - anchor_frame) % animated_across
-    
-    coeff = ((frame - first_defined_frame) / animated_across).abs
-    if (coeff % 2).zero?
-      first_defined_frame + frame_within_loop
+    # Absolute offset from the first keyframe of the animated segment
+    offset = (frame - first_defined_frame).abs
+    absolute_unit = offset % animated_across
+    cycles = (offset / animated_across).floor
+    if (cycles % 2).zero?
+      first_defined_frame + absolute_unit
     else
-      last_defined_frame - frame_within_loop
+      last_defined_frame - absolute_unit
     end
   end
   
   def frame_number_in_cycle(frame)
     animated_across = (last_defined_frame - first_defined_frame)
-    anchor_frame = (frame < first_defined_frame) ? first_defined_frame : last_defined_frame
-    frame_within_loop = (frame - anchor_frame) % animated_across
-    first_defined_frame + frame_within_loop
+    offset = (frame - first_defined_frame)
+    modulo = (offset % animated_across)
+    first_defined_frame + modulo
   end
   
   def sample_from_segments(at_frame)
