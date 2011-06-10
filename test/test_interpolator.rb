@@ -57,7 +57,7 @@ class TestInterpolator < Test::Unit::TestCase
   
   def test_simple_setup_from_2011
     data = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example.action")
-    channels_in_action = FlameChannelParser::Parser2011.new.parse(data)
+    channels_in_action = FlameChannelParser.parse(data)
     channels_in_action.reject!{|c| c.length < 4 }
     
     reference = channels_in_action.find{|c| c.name == "position/x" && c.length > 2}

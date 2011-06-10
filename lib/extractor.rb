@@ -20,6 +20,8 @@ class FlameChannelParser::Extractor
   #  :start_frame - From which frame the curve should be baked. Will default to the first keyframe of the curve
   #  :end_frame - Upto which frame to bake. Will default to the last keyframe of the curve
   #  :channel - Name of the channel to extract from the setup. Defaults to "Timing/Timing" (timewarp frame)
+  #
+  # Note that start_frame and end_frame will be converted to integers.
   def self.extract(path, options = {})
     options = DEFAULTS.merge(options)
     File.open(path) do |f|
@@ -47,6 +49,7 @@ class FlameChannelParser::Extractor
     
     from_frame = start_frame || interpolator.first_defined_frame
     to_frame =  end_frame || interpolator.last_defined_frame
+    
     unless (from_frame && to_frame)
       raise NoKeyframesError, "This channel probably has no animation so there is no way to automatically tell how many keyframes it has. " +
         "Please set the start and end frame explicitly."
@@ -54,7 +57,10 @@ class FlameChannelParser::Extractor
     
     raise EmptySegmentError, "The segment you are trying to bake is too small (it has nothing in it)" if to_frame - from_frame < 1
     
-    (from_frame..to_frame).each do | frame |
+    from_frame_i = from_frame.to_f.floor
+    to_frame_i = to_frame.to_f.ceil
+    
+    (from_frame_i..to_frame_i).each do | frame |
       line = "%d\t%.5f\n" % [frame, interpolator.sample_at(frame)]
       to_io << line
     end
