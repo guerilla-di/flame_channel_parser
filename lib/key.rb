@@ -34,9 +34,9 @@ class FlameChannelParser::Key
   
   # Returns the RightSlope parameter of the keyframe which we use for interpolations
   def left_slope
-    return right_slope unless broken?
+    return right_slope unless break_slope
     
-    if l_handle_x # 2012 setups do not have slopes but have tangents
+    if has_2012_tangents? # 2012 setups do not have slopes but have tangents
       dy = @value - @l_handle_y
       dx = @l_handle_x.to_f - @frame
       (dy / dx  * -1)
@@ -47,18 +47,13 @@ class FlameChannelParser::Key
   
   # Returns the LeftSlope parameter of the keyframe which we use for interpolations
   def right_slope
-    if l_handle_x
+    if has_2012_tangents?
       dy = @value - @r_handle_y
       dx = @frame.to_f - @r_handle_x
       dy / dx
     else
       (@right_slope || nil).to_f 
     end
-  end
-  
-  # Tells whether the slope of this keyframe is broken (not smooth)
-  def broken?
-    break_slope
   end
   
   # Tells if this keyframe has 2012 tangents in it

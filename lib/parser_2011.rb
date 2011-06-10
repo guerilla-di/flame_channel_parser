@@ -62,7 +62,7 @@ module FlameChannelParser
     LITERALS = %w( linear constant natural hermite cubic bezier cycle revcycle )
     
     def parse_channel(io, channel_name, node_type, node_name)
-      c = Channel.new(io, channel_name, node_type, node_name)
+      c = Channel.new(channel_name, node_type, node_name)
       
       indent, end_mark = nil, "ENDMARK"
       
