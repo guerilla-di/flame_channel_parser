@@ -1,8 +1,8 @@
 require "test/unit"
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 
-D = 0.001
 class TestKey < Test::Unit::TestCase
+  D = 0.001
   def test_default_values
     k = FlameChannelParser::Key.new
     assert_in_delta 1.0, k.frame, D

@@ -1,11 +1,11 @@
 require "test/unit"
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 
-D = 0.001
 
 include FlameChannelParser::Segments
 
 class TestConstantFunction < Test::Unit::TestCase
+  D = 0.001
   def test_segment
     seg = ConstantFunction.new(123.4)
     assert seg.defines?(-1), "The segment should define this frame"
@@ -16,6 +16,7 @@ end
 
 
 class TestConstantSegment < Test::Unit::TestCase
+  D = 0.001
   def test_segment
     seg = ConstantSegment.new(12, 25, 2.5)
     
@@ -31,7 +32,7 @@ class TestConstantSegment < Test::Unit::TestCase
 end
 
 class TestBezierSegment < Test::Unit::TestCase
-  
+  D = 0.001
   def test_segment
     seg = BezierSegment.new(
       frame_from = 117,
@@ -54,6 +55,8 @@ class TestBezierSegment < Test::Unit::TestCase
 end
 
 class TestLinearSegment < Test::Unit::TestCase
+  D = 0.001
+  
   def test_segment
     seg = LinearSegment.new(12, 25, 2.5, 4.5)
     
@@ -80,6 +83,8 @@ class TestConstantPrepolate < Test::Unit::TestCase
 end
 
 class TestHermiteSegment < Test::Unit::TestCase
+  D = 0.001
+  
   def test_last_curve_segment
     refdata = %w(
       258.239

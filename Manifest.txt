@@ -9,8 +9,7 @@ lib/extractor.rb
 lib/flame_channel_parser.rb
 lib/interpolator.rb
 lib/key.rb
-lib/parser_2011.rb
-lib/parser_2012.rb
+lib/parser.rb
 lib/segments.rb
 test/channel_with_constants.dat
 test/sample_channel.dat
@@ -32,7 +31,9 @@ test/snaps/RefT_Steadicam_TwoKFs_HermiteAtBegin.timewarp
 test/snaps/TW.timewarp
 test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
 test/snaps/timewarp_where_interp_fails_at_end.timewarp
+test/test_channel.rb
 test/test_extractor.rb
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb
+test/test_key.rb
 test/test_segments.rb

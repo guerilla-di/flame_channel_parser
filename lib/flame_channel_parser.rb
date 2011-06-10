@@ -10,5 +10,5 @@ module FlameChannelParser
 end
 
 %w(
-  key channel parser_2011 segments interpolator extractor
+  key channel parser segments interpolator extractor
 ).each {|f| require File.expand_path(File.dirname(__FILE__) + "/" + f ) }
