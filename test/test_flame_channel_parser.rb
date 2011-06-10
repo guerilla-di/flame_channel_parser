@@ -18,7 +18,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_kind_of Array, channels
     assert_equal 1, channels.length, "Should find one channel"
     
-    assert_kind_of FlameChannelParser::Parser2011::Channel, channels[0]
+    assert_kind_of FlameChannelParser::Channel, channels[0]
     
     ch = channels[0]
     assert_equal 4, ch.length

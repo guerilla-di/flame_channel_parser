@@ -4,9 +4,11 @@ Manifest.txt
 README.rdoc
 Rakefile
 bin/bake_flame_channel
+lib/channel.rb
 lib/extractor.rb
 lib/flame_channel_parser.rb
 lib/interpolator.rb
+lib/key.rb
 lib/parser_2011.rb
 lib/parser_2012.rb
 lib/segments.rb

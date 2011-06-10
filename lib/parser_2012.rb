@@ -1,42 +1,5 @@
-require "delegate"
-require File.dirname(__FILE__) + "/interpolator"
-
 # This parser is automatically used for 2012 setups
 class FlameChannelParser::Parser2012 < FlameChannelParser::Parser2011
-
-  class ModernKey < Struct.new(:frame, :value, :r_handle_x, :l_handle_x, :r_handle_y, :l_handle_y, :curve_mode, :curve_order, :break_slope)
-    alias_method :to_s, :inspect
-    
-    # Adapter for old interpolation
-    def interpolation
-      return :constant if curve_order.to_s == "constant"
-      return :hermite if curve_order.to_s == "cubic" && (curve_mode.to_s == "hermite" || curve_mode.to_s == "natural")
-      return :bezier if curve_order.to_s == "cubic" && curve_mode.to_s == "bezier"
-      return :linear if curve_order.to_s == "linear"
-      
-      raise "Cannot determine interpolation for #{self.inspect}"
-    end
-    
-    # Compute pre-212 slope which we use for interpolations
-    def left_slope
-      return right_slope unless broken?
-      
-      dy = value - l_handle_y
-      dx = l_handle_x - frame
-      dy / dx  * -1
-    end
-    
-    # Compute pre-212 slope which we use for interpolations
-    def right_slope
-      dy = value - r_handle_y
-      dx = frame - r_handle_x
-      dy / dx
-    end
-    
-    def broken?
-      break_slope
-    end
-  end
   
   def matchers
      [
@@ -50,10 +13,5 @@ class FlameChannelParser::Parser2012 < FlameChannelParser::Parser2011
        [:curve_order, :to_s,  /CurveOrder (\w+)/],
        [:break_slope, :to_s,  /BreakSlope (\w+)/],
      ]
-   end
-   
-  
-  def create_key
-    ModernKey.new
   end
 end

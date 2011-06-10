@@ -26,8 +26,6 @@ module FlameChannelParser
   end
 end
 
-require File.expand_path(File.dirname(__FILE__)) + "/parser_2011"
-require File.expand_path(File.dirname(__FILE__)) + "/parser_2012"
-require File.expand_path(File.dirname(__FILE__)) + "/segments"
-require File.expand_path(File.dirname(__FILE__)) + "/interpolator"
-require File.expand_path(File.dirname(__FILE__)) + "/extractor"
+%w(
+  key channel parser_2011 parser_2012 segments interpolator extractor
+).each {|f| require File.expand_path(File.dirname(__FILE__) + "/" + f ) }
