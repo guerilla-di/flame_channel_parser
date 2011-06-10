@@ -32,7 +32,7 @@ To use the library:
     frame_channel = channels.find{|c| c.name == "Timing/Timing" }
     
     # Grab the interpolator object for this channel.
-    interpolator = FlameChannelParser::Interpolator.new(frame_channel)
+    interpolator = frame_channel.to_interpolator
     
     # Now sample from frame 20 to frame 250.
     # You can also sample at fractional frames if you want to.
