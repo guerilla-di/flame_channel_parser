@@ -19,20 +19,10 @@ class FlameChannelParser::Interpolator
     @extrap = channel.extrapolation
     
     # Edge case - channel has no anim at all
-    if channel.length.zero?
-      @segments << ConstantFunction.new(channel.base_value)
+    @segments = if channel.length.zero?
+      [ConstantFunction.new(channel.base_value)]
     else
-      
-      # First the prepolating segment
-      @segments << pick_prepolation(channel.extrapolation, channel[0], channel[1])
-      
-      # Then all the intermediate segments, one segment between each pair of keys
-      channel[0..-2].each_with_index do | key, index |
-        @segments << key_pair_to_segment(key, channel[index + 1])
-      end
-      
-      # so we just output it separately
-      @segments << pick_extrapolation(channel.extrapolation, channel[-2], channel[-1])
+      create_segments_from_channel(channel)
     end
   end
   
@@ -64,6 +54,19 @@ class FlameChannelParser::Interpolator
   end
   
   private
+  
+  def create_segments_from_channel(channel)
+    # First the prepolating segment
+    segments = [pick_prepolation(channel.extrapolation, channel[0], channel[1])]
+    
+    # Then all the intermediate segments, one segment between each pair of keys
+    channel[0..-2].each_with_index do | key, index |
+      segments << key_pair_to_segment(key, channel[index + 1])
+    end
+    
+    # and the extrapolator
+    segments << pick_extrapolation(channel.extrapolation, channel[-2], channel[-1])
+  end
   
   def frame_number_in_revcycle(frame)
     animated_across = (last_defined_frame - first_defined_frame)
