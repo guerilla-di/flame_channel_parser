@@ -22,6 +22,15 @@ class FlameChannelParser::Key
   # Coordinates of the handles for 2012 setups
   attr_accessor :l_handle_x, :l_handle_y, :r_handle_x, :r_handle_y
   
+  # Default value is 0.f
+  def value
+    @value.to_f
+  end
+
+  # Default frame is 1.0f
+  def frame
+    (@frame || 1).to_f
+  end
   
   # Returns the RightSlope parameter of the keyframe which we use for interpolations
   def left_slope
@@ -29,7 +38,7 @@ class FlameChannelParser::Key
     
     if l_handle_x # 2012 setups do not have slopes but have tangents
       dy = @value - @l_handle_y
-      dx = @l_handle_x - @frame
+      dx = @l_handle_x.to_f - @frame
       (dy / dx  * -1)
     else
       @left_slope.to_f
@@ -40,7 +49,7 @@ class FlameChannelParser::Key
   def right_slope
     if l_handle_x
       dy = @value - @r_handle_y
-      dx = @frame - @r_handle_x
+      dx = @frame.to_f - @r_handle_x
       dy / dx
     else
       (@right_slope || nil).to_f 
@@ -52,10 +61,15 @@ class FlameChannelParser::Key
     break_slope
   end
   
+  # Tells if this keyframe has 2012 tangents in it
+  def has_2012_tangents?
+    @has_tangents ||= !!(l_handle_x && l_handle_y)
+  end
+  
   # Adapter for old interpolation
   def interpolation
     # Just return the interpolation type for pre-2012 setups
-    return @interpolation unless l_handle_x
+    return (@interpolation || :constant) unless has_2012_tangents?
     
     return :constant if curve_order.to_s == "constant"
     return :hermite if curve_order.to_s == "cubic" && (curve_mode.to_s == "hermite" || curve_mode.to_s == "natural")
