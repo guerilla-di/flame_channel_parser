@@ -60,8 +60,8 @@ class TestInterpolator < Test::Unit::TestCase
     channels_in_action = FlameChannelParser.parse(data)
     channels_in_action.reject!{|c| c.length < 4 }
     
-    reference = channels_in_action.find{|c| c.name == "position/x" && c.length > 2}
-    sampled = channels_in_action.find{|c| c.name == "position/y"  && c.length > 2}
+    reference = channels_in_action.find{|c| c.path == "axis1/position/x" }
+    sampled = channels_in_action.find{|c| c.path == "axis1/position/y"}
     assert_same_interpolation(1..200, reference, sampled)
   end
   

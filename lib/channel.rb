@@ -29,5 +29,9 @@ module FlameChannelParser
     def to_interpolator
       FlameChannelParser::Interpolator.new(self)
     end
+    
+    def inspect
+      "<Channel (%s %s) with %d keys>" % [@node_type, path, @keys.size]
+    end
   end
 end
