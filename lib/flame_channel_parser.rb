@@ -3,7 +3,7 @@ require "delegate"
 module FlameChannelParser
   VERSION = '2.0.0'
   
-  # Parse a Flame setup into an array of ChannelBlock objects
+  # Parse a Flame setup into an array of Channel
   def self.parse(io)
     Parser.new.parse(io)
   end

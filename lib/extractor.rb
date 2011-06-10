@@ -1,4 +1,4 @@
-# Extracts and bakes a specific animation channel
+# Extracts and bakes a specific animation channel to a given buffer, one string per frame
 class FlameChannelParser::Extractor
   
   DEFAULT_CHANNEL_TO_EXTRACT = "Timing/Timing"
@@ -22,6 +22,10 @@ class FlameChannelParser::Extractor
   #  :channel - Name of the channel to extract from the setup. Defaults to "Timing/Timing" (timewarp frame)
   #
   # Note that start_frame and end_frame will be converted to integers.
+  # The output will look like this:
+  #
+  #   1  123.456
+  #   2  124.567
   def self.extract(path, options = {})
     options = DEFAULTS.merge(options)
     File.open(path) do |f|
