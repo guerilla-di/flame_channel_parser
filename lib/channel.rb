@@ -12,8 +12,7 @@ module FlameChannelParser
     attr_reader :node_type, :node_name
     attr_accessor :base_value, :name, :extrapolation
     
-    def_delegators :@keys, :empty?, :size, :each, :[], :push
-    alias_method :length, :size
+    def_delegators :@keys, :empty?, :length, :each, :[], :push
     
     def initialize(io, channel_name, node_type, node_name)
       @keys = []
