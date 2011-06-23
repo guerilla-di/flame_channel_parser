@@ -1,3 +1,8 @@
+=== 2.0.1 / 2011-23-06
+
+* Fix the bake_flame_channel binary to use the proper extractor API
+* Add a test for the binary
+
 === 2.0.0 / 2011-08-06
 
 * Remove most of the Array methods from the Channel object

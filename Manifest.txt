@@ -32,6 +32,7 @@ test/snaps/TW.timewarp
 test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp
 test/snaps/timewarp_where_interp_fails_at_end.timewarp
 test/test_channel.rb
+test/test_cli.rb
 test/test_extractor.rb
 test/test_flame_channel_parser.rb
 test/test_interpolator.rb

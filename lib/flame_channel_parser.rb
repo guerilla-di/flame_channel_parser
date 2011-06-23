@@ -1,7 +1,5 @@
-require "delegate"
-
 module FlameChannelParser
-  VERSION = '2.0.0'
+  VERSION = '2.0.1'
   
   # Parse a Flame setup into an array of Channel
   def self.parse(io)
