@@ -50,8 +50,9 @@ class CliTest < Test::Unit::TestCase
     tf = Tempfile.new("experiment")
     full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW.timewarp"
     status, output, e = cli(" --to-file " + tf.path + " " + full_path)
-  
+    
     assert_equal 0, status
+    assert_equal 0, output.length
     assert_equal 816, File.read(tf.path).split("\n").length, "Should have output 816 frames"
   ensure
     tf.close!
