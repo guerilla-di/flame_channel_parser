@@ -9,9 +9,6 @@ class FlameChannelParser::Extractor
   # Raised when you try to autodetect the length of a channel that has no keyframes
   class NoKeyframesError < RuntimeError; end
   
-  # Raised when you try to bake 0 or negative amount of frames
-  class EmptySegmentError < RuntimeError; end
-  
   # Pass the path to Flame setup here and you will get the animation curve on the object passed in
   # the :destionation option (defaults to STDOUT). The following options are accepted:
   #
@@ -53,12 +50,15 @@ class FlameChannelParser::Extractor
   def configure_start_and_end_frame(f, options, interpolator)
     # If the settings specify last and first frame...
     if options[:on_curve_limits]
-      options[:start_frame] = interpolator.first_defined_frame
-      options[:end_frame] = interpolator.last_defined_frame
-      unless (options[:start_frame] && options[:end_frame])
+      options[:start_frame] = interpolator.first_defined_frame.to_i
+      options[:end_frame] = interpolator.last_defined_frame.to_i
+      if (!options[:start_frame] || !options[:end_frame])
         raise NoKeyframesError, "This channel probably has no animation so there " + 
           "is no way to automatically tell how many keyframes it has. " +
           "Please set the start and end frame explicitly."
+      elsif options[:end_frame] == options[:start_frame]
+        raise NoKeyframesError, "This channel has only one keyframe " + 
+          "at frame #{options[:start_frame]}and baking it makes no sense."
       end
     else # Detect from the setup itself (the default)
       # First try to detect start and end frames from the known flags
@@ -95,8 +95,6 @@ class FlameChannelParser::Extractor
   end
   
   def write_channel(interpolator, to_io, from_frame_i, to_frame_i)
-    
-    raise EmptySegmentError, "The segment you are trying to bake is too small (it has nothing in it)" if to_frame_i - from_frame_i < 1
     
     if (to_frame_i - from_frame_i) == 1
       $stderr.puts "WARNING: You are extracting one animation frame. Check the length of your setup, or set the range manually"

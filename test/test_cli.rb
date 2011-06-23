@@ -2,8 +2,6 @@ require "test/unit"
 require "stringio"
 require "tempfile"
 
-require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
-
 class CliTest < Test::Unit::TestCase
   BIN_P = File.expand_path(File.dirname(__FILE__) + "/../bin/bake_flame_channel")
   
@@ -44,6 +42,20 @@ class CliTest < Test::Unit::TestCase
     status, output, e = cli(" " + full_path)
     assert_equal 0, status
     assert_equal 747, output.split("\n").length, "Should have output 816 frames"
+  end
+  
+  def test_cli_with_file_length
+     full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW_015_010_v03.timewarp"
+     status, output, e = cli(full_path)
+     assert_equal 0, status
+     assert_equal 476, output.split("\n").length, "Should have output 476 frames"
+  end
+   
+  def test_cli_with_curve_limits
+     full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW_015_010_v03.timewarp"
+     status, output, e = cli(" --keyframed-range-only " + full_path)
+     assert_equal 0, status
+     assert_equal 531, output.split("\n").length, "Should have output 513 frames"
   end
   
   def test_cli_with_output_to_file

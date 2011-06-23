@@ -7,7 +7,8 @@ class TestExtractor < Test::Unit::TestCase
   
   def test_basic_operation
     io = StringIO.new
-    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", :destination => io)
+    opts = {:destination => io}
+    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", opts)
     assert_equal File.read(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_Extraction.txt"), io.string
   end
   
@@ -31,7 +32,6 @@ class TestExtractor < Test::Unit::TestCase
     io = StringIO.new
     o = {:destination => io, :start_frame => 19, :end_frame => 347 }
     FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", o)
-    
     assert_equal File.read(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_Extraction_F19_to_347.txt"), io.string
   end
   
@@ -54,8 +54,10 @@ class TestExtractor < Test::Unit::TestCase
   end
   
   def test_constant_channels_need_domain_of_definition_on_time
+    opts = {:channel => "Mix/Mix", :on_curve_limits => true}
+    
     assert_raise(FlameChannelParser::Extractor::NoKeyframesError) do
-      FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", :channel => "Mix/Mix")
+      FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", opts)
     end
   end
   
