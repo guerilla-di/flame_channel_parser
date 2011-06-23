@@ -30,6 +30,10 @@ op.on(" -s", "--startframe FRAME", Integer,
 op.on(" -e", "--endframe FRAME", Integer,
   "Bake the curve upto this specific frame (defaults to the last keyframe in the setup)"
 ) {|upto| options[:end_frame] = upto }
+op.on(" -c", "--curve-range",
+  "Bake the curve from the first keyframe to the last only (overrides --startframe and --endframe)"
+) {|upto| options[:on_curve_limits] = true }
+
 op.on(" -f", "--to-file FILENAME",  String, 
   "Write the curve to a file at this path instead of printing it to STDOUT"
 ) {|path| options[:destination] = File.open(path, "wb") }

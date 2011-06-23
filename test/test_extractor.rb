@@ -4,18 +4,11 @@ require "stringio"
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 
 class TestExtractor < Test::Unit::TestCase
+  
   def test_basic_operation
     io = StringIO.new
     FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", :destination => io)
     assert_equal File.read(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_Extraction.txt"), io.string
-  end
-  
-  def test_channel_selection_by_path_raises_with_not_animated_channel_and_no_start_and_end
-    io = StringIO.new
-    ops = {:destination => io, :channel => "axis1/position/z"}
-    assert_raise(FlameChannelParser::Extractor::NoKeyframesError) do
-      FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/FLEM_curves_example_migrated_to_2012.action", ops)
-    end
   end
   
   def test_channel_selection_by_path_outputs_properly
@@ -40,6 +33,24 @@ class TestExtractor < Test::Unit::TestCase
     FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/RefT_Steadicam.timewarp", o)
     
     assert_equal File.read(File.dirname(__FILE__) + "/snaps/RefT_Steadicam_Extraction_F19_to_347.txt"), io.string
+  end
+  
+  def test_properly_recognizes_timewarp_length_in_timewarp
+    io = StringIO.new
+    o = {:destination => io }
+    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/TW_015_010_v03.timewarp", o)
+    lines = io.string.split("\n")
+    
+    assert_equal 476, lines.length, "Should have parsed out 476 frames even though animation curves go further"
+  end
+  
+  def test_properly_recognizes_timewarp_length_in_action
+    io = StringIO.new
+    o = {:destination => io , :channel => "axis1/position/z"}
+    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/FLEM_BrokenTangents.action", o)
+    lines = io.string.split("\n")
+    
+    assert_equal 125, lines.length, "Should have parsed out 125 frames even though animation curves go further"
   end
   
   def test_constant_channels_need_domain_of_definition_on_time

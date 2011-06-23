@@ -43,7 +43,7 @@ class CliTest < Test::Unit::TestCase
     full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW.timewarp"
     status, output, e = cli(" " + full_path)
     assert_equal 0, status
-    assert_equal 816, output.split("\n").length, "Should have output 816 frames"
+    assert_equal 747, output.split("\n").length, "Should have output 816 frames"
   end
   
   def test_cli_with_output_to_file
@@ -53,7 +53,7 @@ class CliTest < Test::Unit::TestCase
     
     assert_equal 0, status
     assert_equal 0, output.length
-    assert_equal 816, File.read(tf.path).split("\n").length, "Should have output 816 frames"
+    assert_equal 747, File.read(tf.path).split("\n").length, "Should have output 816 frames"
   ensure
     tf.close!
   end

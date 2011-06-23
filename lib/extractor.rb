@@ -2,7 +2,6 @@
 class FlameChannelParser::Extractor
   
   DEFAULT_CHANNEL_TO_EXTRACT = "Timing/Timing"
-  DEFAULTS = {:destination => $stdout, :start_frame => nil, :end_frame => nil, :channel => DEFAULT_CHANNEL_TO_EXTRACT }
   
   # Raised when a channel is not found in the setup file
   class ChannelNotFoundError < RuntimeError; end
@@ -27,18 +26,64 @@ class FlameChannelParser::Extractor
   #   1  123.456
   #   2  124.567
   def self.extract(path, options = {})
+    new.extract(path, options)
+  end
+  
+  def extract(path, options)
     options = DEFAULTS.merge(options)
     File.open(path) do |f|
+      
+      # Then parse
       channels = FlameChannelParser.parse(f)
       selected_channel = find_channel_in(channels, options[:channel])
       interpolator = FlameChannelParser::Interpolator.new(selected_channel)
+      
+      # Configure the range
+      configure_start_and_end_frame(f, options, interpolator)
       write_channel(interpolator, options[:destination], options[:start_frame], options[:end_frame])
     end
   end
   
   private
   
-  def self.find_channel_in(channels, channel_path)
+  DEFAULTS = {:destination => $stdout, :start_frame => 1, :end_frame => nil, :channel => DEFAULT_CHANNEL_TO_EXTRACT, :on_curve_limits => false }
+  SETUP_END_FRAME_PATTERN = /(MaxFrames|Frames)(\s+)(\d+)/
+  SETUP_START_FRAME_PATTERN = /(MinFrame)(\s+)(\d+)/
+  
+  def configure_start_and_end_frame(f, options, interpolator)
+    # If the settings specify last and first frame...
+    if options[:on_curve_limits]
+      options[:start_frame] = interpolator.first_defined_frame
+      options[:end_frame] = interpolator.last_defined_frame
+      unless (options[:start_frame] && options[:end_frame])
+        raise NoKeyframesError, "This channel probably has no animation so there " + 
+          "is no way to automatically tell how many keyframes it has. " +
+          "Please set the start and end frame explicitly."
+      end
+    else # Detect from the setup itself (the default)
+      # First try to detect start and end frames from the known flags
+      f.rewind
+      detected_start, detected_end = detect_start_and_end_frame_in_io(f)
+      options[:start_frame] = (detected_start || 1)
+      options[:end_frame] = detected_end
+    end
+  end
+  
+  
+  def detect_start_and_end_frame_in_io(io)
+    cur_offset, s, e = io.pos, nil, nil
+    io.rewind
+    while line = io.gets
+      if (elements = line.scan(SETUP_START_FRAME_PATTERN)).any? 
+        s = elements.flatten[-1].to_i
+      elsif (elements = line.scan(SETUP_END_FRAME_PATTERN)).any? 
+        e = elements.flatten[-1].to_i
+        return [s, e]
+      end
+    end
+  end
+  
+  def find_channel_in(channels, channel_path)
     selected_channel = channels.find{|c| channel_path == c.path }
     unless selected_channel
       message = "Channel #{channel_path.inspect} not found in this setup (set the channel with the --channel option). Found other channels though:" 
@@ -48,21 +93,14 @@ class FlameChannelParser::Extractor
     end
     selected_channel
   end
-
-  def self.write_channel(interpolator, to_io, start_frame, end_frame)
+  
+  def write_channel(interpolator, to_io, from_frame_i, to_frame_i)
     
-    from_frame = start_frame || interpolator.first_defined_frame
-    to_frame =  end_frame || interpolator.last_defined_frame
+    raise EmptySegmentError, "The segment you are trying to bake is too small (it has nothing in it)" if to_frame_i - from_frame_i < 1
     
-    unless (from_frame && to_frame)
-      raise NoKeyframesError, "This channel probably has no animation so there is no way to automatically tell how many keyframes it has. " +
-        "Please set the start and end frame explicitly."
+    if (to_frame_i - from_frame_i) == 1
+      $stderr.puts "WARNING: You are extracting one animation frame. Check the length of your setup, or set the range manually"
     end
-    
-    raise EmptySegmentError, "The segment you are trying to bake is too small (it has nothing in it)" if to_frame - from_frame < 1
-    
-    from_frame_i = from_frame.to_f.floor
-    to_frame_i = to_frame.to_f.ceil
     
     (from_frame_i..to_frame_i).each do | frame |
       line = "%d\t%.5f\n" % [frame, interpolator.sample_at(frame)]
