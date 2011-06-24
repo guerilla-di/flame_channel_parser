@@ -1,3 +1,12 @@
+=== 2.1.1 / 2011-23-06
+
+* Fixed exceptions for for channel not found errors
+* Uses cli_test for testing the application
+
+=== 2.1.0 / 2011-23-06
+
+* Fixed range detection for setups (we now properly detect the last frame for setups that support it)
+
 === 2.0.1 / 2011-23-06
 
 * Fix the bake_flame_channel binary to use the proper extractor API

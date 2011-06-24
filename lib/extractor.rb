@@ -27,7 +27,7 @@ class FlameChannelParser::Extractor
   end
   
   def extract(path, options)
-    options = DEFAULTS.merge(options)
+    options = DEFAULTS.dup.merge(options)
     File.open(path) do |f|
       
       # Then parse
@@ -37,13 +37,17 @@ class FlameChannelParser::Extractor
       
       # Configure the range
       configure_start_and_end_frame(f, options, interpolator)
+      
+      # And finally...
       write_channel(interpolator, options[:destination], options[:start_frame], options[:end_frame])
     end
   end
   
   private
   
-  DEFAULTS = {:destination => $stdout, :start_frame => 1, :end_frame => nil, :channel => DEFAULT_CHANNEL_TO_EXTRACT, :on_curve_limits => false }
+  DEFAULT_START_FRAME = 1
+  DEFAULTS = {:destination => $stdout, :start_frame => nil, :end_frame => nil, :channel => DEFAULT_CHANNEL_TO_EXTRACT, :on_curve_limits => false }
+  
   SETUP_END_FRAME_PATTERN = /(MaxFrames|Frames)(\s+)(\d+)/
   SETUP_START_FRAME_PATTERN = /(MinFrame)(\s+)(\d+)/
   
@@ -64,8 +68,9 @@ class FlameChannelParser::Extractor
       # First try to detect start and end frames from the known flags
       f.rewind
       detected_start, detected_end = detect_start_and_end_frame_in_io(f)
-      options[:start_frame] = (detected_start || 1)
-      options[:end_frame] = detected_end
+      
+      options[:start_frame] = options[:start_frame] || detected_start || DEFAULT_START_FRAME
+      options[:end_frame] ||= detected_end
     end
   end
   
@@ -83,13 +88,16 @@ class FlameChannelParser::Extractor
     end
   end
   
+  def compose_channel_not_found_message(for_channel, other_channels)
+    message = "Channel #{for_channel.inspect} not found in this setup (set the channel with the :channel option). Found other channels though:" 
+    message << "\n"
+    message += other_channels.map{|c| "\t%s\n" % c.path }.join
+  end
+  
   def find_channel_in(channels, channel_path)
     selected_channel = channels.find{|c| channel_path == c.path }
     unless selected_channel
-      message = "Channel #{channel_path.inspect} not found in this setup (set the channel with the --channel option). Found other channels though:" 
-      message << "\n"
-      message += channels.map{|c| "\t%s\n" % c.path }.join
-      raise ChannelNotFoundError, message
+      raise ChannelNotFoundError, compose_channel_not_found_message(channel_path, channels)
     end
     selected_channel
   end
