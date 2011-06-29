@@ -12,6 +12,13 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_equal 816, chan[-1].frame
   end
   
+  def test_parsing_kronos_setup
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos")
+    chans = FlameChannelParser.parse(data)
+    assert_equal "Frame", chans[0].path
+    assert_equal 12, chans[0].length
+  end
+  
   def test_parsing
     data = File.open(File.dirname(__FILE__) + "/sample_channel.dat")
     channels = FlameChannelParser.parse(data)

@@ -95,6 +95,12 @@ class TestInterpolator < Test::Unit::TestCase
     assert_same_interpolation(-10..300, reference, sampled)
   end
   
+  def test_kronos_tw
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos")
+    frame_chan = FlameChannelParser.parse(data)[0]
+    assert_in_delta DELTA, 5000.0, frame_chan.to_interpolator.sample_at(5001)
+  end
+  
   def test_tw_with_constant
     data = File.open(File.dirname(__FILE__) + "/snaps/TW_SingleFrameExtrapolated_from2011.timewarp")
     channels_in_tw = FlameChannelParser.parse(data)
