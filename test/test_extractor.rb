@@ -71,6 +71,6 @@ class TestExtractor < Test::Unit::TestCase
     io = StringIO.new
     o = {:destination => io , :channel => "Frame"}
     FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos", o)
-    assert_equal 5000, lines.length, "Should have parsed out 5000 frames"
+    assert_equal 5000, io.string.split("\n").length, "Should have parsed out 5000 frames"
   end
 end

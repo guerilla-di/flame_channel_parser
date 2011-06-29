@@ -46,24 +46,34 @@ class FlameChannelParser::Extractor
   private
   
   DEFAULT_START_FRAME = 1
-  DEFAULTS = {:destination => $stdout, :start_frame => nil, :end_frame => nil, :channel => DEFAULT_CHANNEL_TO_EXTRACT, :on_curve_limits => false }
+  DEFAULTS = {
+    :destination => $stdout,
+    :start_frame => nil,
+    :end_frame => nil,
+    :channel => DEFAULT_CHANNEL_TO_EXTRACT,
+    :on_curve_limits => false
+  }
   
   SETUP_END_FRAME_PATTERN = /(MaxFrames|Frames)(\s+)(\d+)/
   SETUP_START_FRAME_PATTERN = /(MinFrame)(\s+)(\d+)/
   
+  def start_and_end_frame_from_curve_length(interp)
+    s, e = interp.first_defined_frame.to_i, interp.last_defined_frame.to_i
+    if (!s || !e)
+      raise NoKeyframesError, "This channel probably has no animation so there " + 
+        "is no way to automatically tell how many keyframes it has. " +
+        "Please set the start and end frame explicitly."
+    elsif s == e
+      raise NoKeyframesError, "This channel has only one keyframe " + 
+        "at frame #{s}and baking it makes no sense."
+    end
+    [s, e]
+  end
+  
   def configure_start_and_end_frame(f, options, interpolator)
     # If the settings specify last and first frame...
     if options[:on_curve_limits]
-      options[:start_frame] = interpolator.first_defined_frame.to_i
-      options[:end_frame] = interpolator.last_defined_frame.to_i
-      if (!options[:start_frame] || !options[:end_frame])
-        raise NoKeyframesError, "This channel probably has no animation so there " + 
-          "is no way to automatically tell how many keyframes it has. " +
-          "Please set the start and end frame explicitly."
-      elsif options[:end_frame] == options[:start_frame]
-        raise NoKeyframesError, "This channel has only one keyframe " + 
-          "at frame #{options[:start_frame]}and baking it makes no sense."
-      end
+      options[:start_frame], options[:end_frame] = start_and_end_frame_from_curve_length(interpolator)
     else # Detect from the setup itself (the default)
       # First try to detect start and end frames from the known flags
       f.rewind
@@ -72,9 +82,11 @@ class FlameChannelParser::Extractor
       options[:start_frame] = options[:start_frame] || detected_start || DEFAULT_START_FRAME
       options[:end_frame] ||= detected_end
       
-      # If that fails retry with curve limits turned on, and when that fails this will raise the
-      # same exceptions
-      configure_start_and_end_frame(options.merge(:on_curve_limits => true))
+      # If the setup does not contain that information retry with curve limits
+      if !options[:start_frame] || !options[:end_frame]
+        options[:on_curve_limits] = true
+        configure_start_and_end_frame(f, options, interpolator)
+      end
     end
   end
   
