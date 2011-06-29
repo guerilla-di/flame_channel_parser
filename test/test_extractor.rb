@@ -67,4 +67,10 @@ class TestExtractor < Test::Unit::TestCase
     end
   end
   
+  def test_properly_uses_channel_length_for_range_detection_when_setup_length_is_not_give
+    io = StringIO.new
+    o = {:destination => io , :channel => "Frame"}
+    FlameChannelParser::Extractor.extract(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos", o)
+    assert_equal 5000, lines.length, "Should have parsed out 5000 frames"
+  end
 end

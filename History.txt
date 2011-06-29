@@ -1,3 +1,7 @@
+=== 2.1.2 / 2011-29-06
+
+* Fixed automatic length detection in setups that do not specify their length
+
 === 2.1.1 / 2011-23-06
 
 * Fixed exceptions for for channel not found errors

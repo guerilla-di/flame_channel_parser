@@ -71,6 +71,10 @@ class FlameChannelParser::Extractor
       
       options[:start_frame] = options[:start_frame] || detected_start || DEFAULT_START_FRAME
       options[:end_frame] ||= detected_end
+      
+      # If that fails retry with curve limits turned on, and when that fails this will raise the
+      # same exceptions
+      configure_start_and_end_frame(options.merge(:on_curve_limits => true))
     end
   end
   
