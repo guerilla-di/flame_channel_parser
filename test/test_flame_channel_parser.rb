@@ -19,6 +19,17 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_equal 12, chans[0].length
   end
   
+  def test_parsing_kronos_with_reports
+    logging_console = ""
+    data = File.open(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos")
+    parser = FlameChannelParser::Parser.new do | log_message |
+      logging_console << log_message
+    end
+    
+    parser.parse(data)
+    assert_match /Extracting keyframe 10 of 12/, logging_console.inspect
+  end
+  
   def test_parsing
     data = File.open(File.dirname(__FILE__) + "/sample_channel.dat")
     channels = FlameChannelParser.parse(data)

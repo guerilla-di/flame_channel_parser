@@ -3,8 +3,19 @@ require "forwardable"
 # Basic parser used for setups from versions up to 2011
 module FlameChannelParser
   class Parser
+    
+    # Here you can assign a logger proc or a lambda that will be call'ed with progress reports
+    attr_accessor :logger_proc
+    
+    # Initializes a new parser. If the block is passed it will be used to accept log messages
+    def initialize
+      @logger_proc = Proc.new if block_given?
+    end
+    
     # Parses the setup passed in the IO
     def parse(io)
+      @do_logs = (@logger_proc.respond_to?(:call))
+      
       channels = []
       node_name, node_type = nil, nil
       
@@ -15,13 +26,21 @@ module FlameChannelParser
         elsif line =~ NODE_NAME_MATCHER
           node_name = $1
         elsif line =~ CHANNEL_MATCHER && channel_is_useful?($1)
-          channels << parse_channel(io, $1, node_type, node_name)
+          log("Parsing channel #{$1.inspect}")
+          channel = parse_channel(io, $1, node_type, node_name)
+          channels << channel
         end
       end
       
       channels
     end
-  
+    
+    # This method will be called internally with information on items being processed. Here it's
+    # actually blank but if you subclass a parser you can make it do something useful
+    def log(message)
+      @logger_proc.call(message) if @do_logs
+    end
+    
     # Override this method to skip some channels, this will speedup
     # your code alot
     def channel_is_useful?(channel_name)
@@ -74,7 +93,11 @@ module FlameChannelParser
         end
       
         if line =~ KF_COUNT_MATCHER
-          $1.to_i.times { c.push(extract_key_from(io)) }
+          num_keyframes = $1.to_i
+          num_keyframes.times do | idx |
+            log("Extracting keyframe %d of %d" % [idx, num_keyframes])
+            c.push(extract_key_from(io))
+          end
         elsif line =~ BASE_VALUE_MATCHER# && empty?
           c.base_value = $1.to_f
         elsif line =~ EXTRAP_MATCHER

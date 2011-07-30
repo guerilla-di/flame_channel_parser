@@ -1,7 +1,7 @@
 module FlameChannelParser
-  VERSION = '2.1.2'
+  VERSION = '2.2.0'
   
-  # Parse a Flame setup into an array of Channel
+  # Parse a Flame setup into an array of Channel objects
   def self.parse(io)
     Parser.new.parse(io)
   end
