@@ -1,3 +1,7 @@
+=== 2.2.1 / 2011-31-07
+
+* Fix keyframe indices in the progress reports
+
 === 2.2.0 / 2011-31-07
 
 * Output progress reports from the parser

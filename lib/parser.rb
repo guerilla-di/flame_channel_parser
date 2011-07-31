@@ -90,7 +90,7 @@ module FlameChannelParser
         if line =~ KF_COUNT_MATCHER
           num_keyframes = $1.to_i
           num_keyframes.times do | idx |
-            log("Extracting keyframe %d of %d" % [idx, num_keyframes])
+            log("Extracting keyframe %d of %d" % [idx + 1, num_keyframes])
             c.push(extract_key_from(io))
           end
         elsif line =~ BASE_VALUE_MATCHER# && empty?

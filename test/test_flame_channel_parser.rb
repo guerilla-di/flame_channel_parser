@@ -28,7 +28,8 @@ class TestFlameChannelParser < Test::Unit::TestCase
     end
     
     parser.parse(data)
-    assert_match /Extracting keyframe 10 of 12/, logging_console.inspect
+    assert_match /Extracting keyframe 1 of 12/, logging_console
+    assert_no_match /Extracting keyframe 0 of 12/, logging_console, "Keyframe indices should not start at zero"
   end
   
   def test_parsing
