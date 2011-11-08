@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require File.expand_path(File.dirname(__FILE__)) + '/../lib/flame_channel_parser'
+require 'optparse'
+require "update_hints"
+
+options = {:destination => $stdout }
+op = OptionParser.new
+
+op.banner = "Usage: bake_flame_timewarp /usr/discreet/projects/ExpensiveDildo/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt"
+op.on(" -s", "--startframe FRAME", 
+  Integer, "Bake the time curve from this specific frame (defaults to the end of the setup"
+) {|from| options[:start_frame] = from }
+op.on(" -e", "--endframe FRAME",
+  Integer, "Bake the time curve upto this specific frame (defaults to frame 1)"
+) {|upto| options[:end_frame] = upto }
+
+op.parse!
+
+setup_path = ARGV.shift
+
+unless setup_path
+  $stderr.puts "No input file path provided. Please see flametwextract --help for usage information." 
+  exit -1
+end
+
+unless File.exist?(setup_path)
+  $stderr.puts "File does not exist." 
+  exit -1
+end
+
+FlameChannelParser::TimewarpExtractor.new.extract(setup_path, options)
+
+UpdateHints.version_check("flame_channel_parser", FlameChannelParser::VERSION, $stderr)

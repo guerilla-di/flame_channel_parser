@@ -19,6 +19,16 @@ class TestFlameChannelParser < Test::Unit::TestCase
     assert_equal 12, chans[0].length
   end
   
+  def test_parsing_with_block
+    counter = 0
+    f = File.open(File.dirname(__FILE__) + "/snaps/FLEM_curves_example.action")
+    chans = FlameChannelParser.parse(f) do |channel| 
+      counter += 1
+      assert_kind_of FlameChannelParser::Channel, channel
+    end
+    assert_equal 65, counter, "Should find 65 channels"
+  end
+  
   def test_parsing_kronos_with_reports
     logging_console = ""
     data = File.open(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos")

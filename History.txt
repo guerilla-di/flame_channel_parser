@@ -1,3 +1,11 @@
+=== 3.0.0 / 2011-09-11
+
+* Allow for channels to be passed to a block instead of being collected into an array
+
+=== 2.3.0 / 2011-31-07
+
+* Integrate the simple timewarp extractor
+
 === 2.2.1 / 2011-31-07
 
 * Fix keyframe indices in the progress reports

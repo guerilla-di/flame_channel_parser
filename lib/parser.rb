@@ -1,13 +1,12 @@
-require "forwardable"
-
-# Basic parser used for setups from versions up to 2011
 module FlameChannelParser
+  # Comnplete parser class for all Flame/Smoke versions
   class Parser
     
     # Here you can assign a logger proc or a lambda that will be call'ed with progress reports
     attr_accessor :logger_proc
     
-    # Parses the setup passed in the IO
+    # Parses the setup passed in the IO. If a block is given to the method it will yield Channel
+    # objects one by one instead of accumulating them into an array (useful for big setups)
     def parse(io)
       @do_logs = (@logger_proc.respond_to?(:call))
       
@@ -23,11 +22,15 @@ module FlameChannelParser
         elsif line =~ CHANNEL_MATCHER && channel_is_useful?($1)
           log("Parsing channel #{$1.inspect}")
           channel = parse_channel(io, $1, node_type, node_name)
-          channels << channel
+          if block_given?
+            yield(channel)
+          else
+            channels << channel
+          end
         end
       end
       
-      channels
+      return channels unless block_given?
     end
     
     # This method will be called internally with information on items being processed.

@@ -125,9 +125,12 @@ class FlameChannelParser::Extractor
     end
     
     (from_frame_i..to_frame_i).each do | frame |
-      line = "%d\t%.5f\n" % [frame, interpolator.sample_at(frame)]
-      to_io << line
+      write_frame(to_io, frame, interpolator.sample_at(frame))
     end
   end
   
+  def write_frame(to_io, frame, value)
+    line = "%d\t%.5f\n" % [frame, value]
+    to_io << line
+  end
 end

@@ -16,7 +16,11 @@ Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and ad
 
 To just bake a specific channel, use the bake_flame_channel binary.
 
-    $ bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
+    $bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
+
+If you just need to process a timewarp, use the bake_flame_timewarp which autodetects most of the settings by itself
+
+    $bake_flame_timewarp /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
 
 To use the library:
     
