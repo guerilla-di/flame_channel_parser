@@ -16,7 +16,7 @@ Jeweler::Tasks.new do |gem|
   gem.executables = %w( bake_flame_channel bake_flame_timewarp )
   
   # Deps
-  gem.add_dependency "update_hints", "~> 0"
+  gem.add_dependency "update_hints", "~> 1.0"
   
   gem.add_development_dependency "jeweler"
   gem.add_development_dependency "rake"
