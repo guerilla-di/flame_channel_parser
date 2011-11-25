@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Julik Tarkhanov"]
-  s.date = "2011-11-21"
+  s.date = "2011-11-25"
   s.description = "Reads and interpolates animation channels in IFFS setups"
   s.email = "me@julik.nl"
   s.executables = ["bake_flame_channel", "bake_flame_timewarp"]
@@ -82,29 +82,17 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<flame_channel_parser>, [">= 0"])
-      s.add_development_dependency(%q<jeweler>, [">= 0"])
-      s.add_development_dependency(%q<rake>, [">= 0"])
-      s.add_development_dependency(%q<cli_test>, ["~> 1.0"])
       s.add_runtime_dependency(%q<update_hints>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<cli_test>, ["~> 1.0"])
     else
-      s.add_dependency(%q<flame_channel_parser>, [">= 0"])
-      s.add_dependency(%q<jeweler>, [">= 0"])
-      s.add_dependency(%q<rake>, [">= 0"])
-      s.add_dependency(%q<cli_test>, ["~> 1.0"])
       s.add_dependency(%q<update_hints>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<cli_test>, ["~> 1.0"])
     end
   else
-    s.add_dependency(%q<flame_channel_parser>, [">= 0"])
-    s.add_dependency(%q<jeweler>, [">= 0"])
-    s.add_dependency(%q<rake>, [">= 0"])
-    s.add_dependency(%q<cli_test>, ["~> 1.0"])
     s.add_dependency(%q<update_hints>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
