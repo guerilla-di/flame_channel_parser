@@ -7,7 +7,7 @@ class TestTwextract < Test::Unit::TestCase
   def test_parse_with_interpolated_setup
     interpolated_io = StringIO.new
     FlameChannelParser::TimewarpExtractor.new.extract(File.dirname(__FILE__) + "/timewarp_examples/TW_TEST.F_Kronos", :destination => interpolated_io)
-    assert_equal 77981, interpolated_io.pos
+    assert_equal 83051, interpolated_io.pos
   end
   
   def test_parse_kronos_setup

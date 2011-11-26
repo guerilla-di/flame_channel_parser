@@ -28,7 +28,8 @@ class TestCli < Test::Unit::TestCase
   def test_cli_with_proper_output
     full_path = File.expand_path(File.dirname(__FILE__)) + "/timewarp_examples/TW_016_010_v01.timewarp"
     status, output, e = cli(" " + full_path)
+    assert output.include?("framecurve.org/"), "Should include the framecurve URL"
     assert_equal 0, status
-    assert_equal 428, output.split("\n").length, "Should have output 428 frames"
+    assert_equal 430, output.split("\r\n").length, "Should have output 428 frames"
   end
 end

@@ -1,3 +1,5 @@
+# http://framecurve.org/specification-v1.html
+# at_frame	 use_frame
 1	1.00000
 2	2.00000
 3	3.00000
