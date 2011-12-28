@@ -3,6 +3,10 @@ class FlameChannelParser::FramecurveWriters::SoftfxTimewarp
   DATETIME_FORMAT = '%a %b %d %H:%M:%S %Y'
   TIME = Time.local(2011,12,28,14,50,05)
   
+  def self.extension
+    '.timewarp'
+  end
+  
   class KeyWriter
     attr_reader :keys
     def initialize
