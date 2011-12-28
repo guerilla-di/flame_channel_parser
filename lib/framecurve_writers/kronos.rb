@@ -6,7 +6,9 @@ class FlameChannelParser::FramecurveWriters::Kronos < FlameChannelParser::Framec
     buf = StringIO.new
     w = FlameChannelParser::Builder.new(buf)
     w.channel("Frame") do | c |
-      export_timing_channel(c, &Proc.new)
+      writer = KeyWriter.new
+      yield(writer)
+      write_animation(writer.keys, c, :linear)
     end
     
     # Entab everything

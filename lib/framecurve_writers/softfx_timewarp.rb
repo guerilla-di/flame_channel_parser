@@ -4,22 +4,15 @@ class FlameChannelParser::FramecurveWriters::SoftfxTimewarp
   TIME = Time.local(2011,12,28,14,50,05)
   
   class KeyWriter
-    attr_reader :num_keys
-    def initialize(writer)
-      @w = writer
-      @num_keys = 0
+    attr_reader :keys
+    def initialize
+      @keys = []
     end
     
     def key(at, value)
-      @w.key(@num_keys) do | k |
-        k.frame at
-        k.value value.to_f
-        k.interpolation :linear
-        k.left_slope 2.4
-        k.right_slope 2.4
-      end
-      @num_keys += 1
+      @keys.push([at.to_i,value.to_f])
     end
+    
   end
   
   def run_export(io)
@@ -36,12 +29,18 @@ class FlameChannelParser::FramecurveWriters::SoftfxTimewarp
     w.flow_quality 0
     w.linebreak!(2)
     
+    # Accumulate all the keys
+    writer = KeyWriter.new
+    yield(writer)
+    speeds = generate_speed(writer.keys)
     
+    # Compute intermediate frames and speeds
     w.animation do | anim |
-      anim.channel("Speed") do # empty, will be autocomputed
+      anim.channel("Speed") do | speed | 
+        write_animation(speeds, speed, :constant)
       end
       anim.channel("Timing/Timing") do | c |
-        export_timing_channel(c, &Proc.new)
+        write_animation(writer.keys, c, :linear)
       end
     end
     
@@ -49,20 +48,43 @@ class FlameChannelParser::FramecurveWriters::SoftfxTimewarp
   
   private
   
-  def export_timing_channel(c, &blk)
-    buf = StringIO.new
-    channel = FlameChannelParser::Builder.new(buf)
-    kw = KeyWriter.new(channel)
+  def write_animation(tuples, writer, interp = :linear)
+    writer.value tuples[0][1]
+    writer.extrapolation :constant
+    writer.key_version 1
+    writer.size tuples.length
+    tuples.each_with_index do | tuple, i |
+      at, value = tuple
+      writer.key(i) do | k |
+        k.frame at
+        k.value value.to_f
+        k.interpolation interp
+        k.left_slope 2.4
+        k.right_slope 2.4
+      end
+    end
+  end
+  
+  def get_percentage(key, next_key)
+    delta_y = next_key[1] - key[1]
+    delta_t = next_key[0] - key[0]
+    one_frame_differential = delta_y.to_f / delta_t
+    percentage = one_frame_differential * 100
+  end
+  
+  # Tricky bitch
+  def generate_speed(keys)
+    speeds = []
+    keys.each_with_index do | key, idx |
+      next_key = keys[idx + 1]
+      percentage = if next_key.nil? # Last frame here!
+        0.0
+      else
+        get_percentage(key, next_key)
+      end
+      speeds.push([key[0], percentage])
+    end
     
-    # First accumulate all the keyframes
-    yield(kw)
-    
-    c.extrapolation :constant
-    c.value 1
-    c.key_version 1
-    # And then we know how many keyframes we did, export that
-    c.size kw.num_keys
-    # ... and after that the keyframes
-    c << buf.string
+    speeds
   end
 end
