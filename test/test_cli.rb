@@ -1,7 +1,4 @@
-require "test/unit"
-require "stringio"
-require "tempfile"
-require "cli_test"
+require "./helper"
 
 class TestCli < Test::Unit::TestCase
   

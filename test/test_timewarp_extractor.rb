@@ -1,6 +1,4 @@
-require "test/unit"
-require "flame_channel_parser"
-require "stringio"
+require "./helper"
 
 class TestTwextract < Test::Unit::TestCase
   

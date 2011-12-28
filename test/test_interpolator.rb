@@ -1,5 +1,5 @@
-require "test/unit"
-require "stringio"
+require "./helper"
+
 
 require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
 

@@ -1,16 +1,22 @@
-require "test/unit"
-require "stringio"
-require "tempfile"
-require "cli_test"
+require "./helper"
 
 class TestCli < Test::Unit::TestCase
   
-  BINARY = File.expand_path(File.dirname(__FILE__) + "/../bin/bake_flame_timewarp")
+  BINARY = File.expand_path(File.dirname(__FILE__) + "/../bin/flame_to_framecurve")
+  FC_PATH = File.expand_path(File.dirname(__FILE__)) + "/timewarp_examples/TW_016_010_v01.framecurve.txt"
+  TW_PATH = File.expand_path(File.dirname(__FILE__)) + "/timewarp_examples/TW_016_010_v01.timewarp"
   
   # Run the binary under test with passed options, and return [exit_code, stdout_content, stderr_content]
   def cli(commandline_arguments)
     CLITest.new(BINARY).run(commandline_arguments)
   end
+  
+  def delete_test_files
+    File.unlink(FC_PATH) if File.exist?(FC_PATH)
+  end
+  
+  alias_method :setup, :delete_test_files
+  alias_method :teardown, :delete_test_files
   
   def test_cli_with_no_args_produces_usage
     status, o, e = cli('')
@@ -26,10 +32,13 @@ class TestCli < Test::Unit::TestCase
   end
   
   def test_cli_with_proper_output
-    full_path = File.expand_path(File.dirname(__FILE__)) + "/timewarp_examples/TW_016_010_v01.timewarp"
-    status, output, e = cli(" " + full_path)
-    assert output.include?("framecurve.org/"), "Should include the framecurve URL"
+    status, output, e = cli(" " + TW_PATH)
+    assert_equal '', output
+    assert File.exist?(FC_PATH)
+    
+    content = File.read(FC_PATH)
+    assert content.include?("framecurve.org/"), "Should include the framecurve URL"
     assert_equal 0, status
-    assert_equal 430, output.split("\r\n").length, "Should have output 428 frames"
+    assert_equal 430, content.split("\r\n").length, "Should have output 428 frames"
   end
 end

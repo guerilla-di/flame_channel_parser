@@ -1,5 +1,7 @@
 module FlameChannelParser
-  VERSION = '3.0.0'
+  VERSION = '4.0.0'
+  
+  module FramecurveWriters; end
   
   # Parse a Flame setup into an array of Channel objects.
   # If a block is given to the method it will yield Channel
@@ -14,5 +16,9 @@ module FlameChannelParser
 end
 
 %w(
-  key channel parser segments interpolator extractor timewarp_extractor
+  key channel parser segments interpolator extractor timewarp_extractor builder
 ).each {|f| require File.expand_path(File.dirname(__FILE__) + "/" + f ) }
+
+%w(
+  softfx_timewarp batch_timewarp kronos 
+).each {|f| require File.expand_path(File.dirname(__FILE__) + "/framecurve_writers/" + f ) }
