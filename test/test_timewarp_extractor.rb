@@ -16,6 +16,14 @@ class TestTwextract < Test::Unit::TestCase
     assert_same_output(baked_io, interpolated_io)
   end
   
+  def test_parse_batch_tw_setup
+    interpolated_io = StringIO.new
+    baked_io = File.open(File.dirname(__FILE__) + "/timewarp_examples/tw_batch_out.framecurve.txt")
+    
+    FlameChannelParser::TimewarpExtractor.new.extract(File.dirname(__FILE__) + "/snaps/BatchTimewarp_ext1.timewarp_node", :destination => interpolated_io)
+    assert_same_output(baked_io, interpolated_io)
+  end
+  
   private
   
   D = 0.1
