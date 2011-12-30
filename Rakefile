@@ -13,8 +13,6 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://guerilla-di.org/flame-channel-parser/"
   gem.authors = ["Julik Tarkhanov"]
   gem.license = 'MIT'
-  gem.executables = %w( bake_flame_channel bake_flame_timewarp )
-  
 end
 
 Jeweler::RubygemsDotOrgTasks.new
