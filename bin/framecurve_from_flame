@@ -8,10 +8,10 @@ op = OptionParser.new
 
 op.banner = "Usage: framecurve_from_flame /usr/discreet/projects/BoringBeautySpot/timewarp/shot2_tw.timewarp"
 op.on(" -s", "--startframe FRAME", 
-  Integer, "Bake the time curve from this specific frame (defaults to the end of the setup"
+  Integer, "Bake the time curve upto this specific frame (defaults to the end of the setup"
 ) {|from| options[:start_frame] = from }
 op.on(" -e", "--endframe FRAME",
-  Integer, "Bake the time curve upto this specific frame (defaults to frame 1)"
+  Integer, "Bake the time curve from this specific frame (defaults to frame 1)"
 ) {|upto| options[:end_frame] = upto }
 
 op.parse!
