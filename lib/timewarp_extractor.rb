@@ -7,7 +7,7 @@ module FlameChannelParser
     CHANNELS = %( Timing/Timing  Frame )
     
     class X < Extractor
-    
+      
       # This one is overridden here since instead of looking for a particular channel we are looking
       # for matches from a list
       def find_channel_in(channels, channel_path)
