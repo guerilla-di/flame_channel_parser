@@ -40,15 +40,9 @@ op.on(" -f", "--to-file FILENAME",  String,
 
 op.parse!
 setup_path = ARGV.shift
-unless setup_path
-  $stderr.puts "No input file path provided. Please see bake_flame_channel --help for usage information." 
-  exit -1
-end
 
-unless File.exist?(setup_path)
-  $stderr.puts "File does not exist." 
-  exit -1
-end
+fail "No input file path provided. Please see bake_flame_channel --help for usage information." unless setup_path
+fail "File does not exist." unless File.exist?(setup_path)
 
 FlameChannelParser::Extractor.extract(setup_path, options)
 options[:destination].close if options[:destination].respond_to?(:close)
