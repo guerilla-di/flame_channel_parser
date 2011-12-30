@@ -5,7 +5,7 @@
 #
 # == Usage
 # 
-#   bake_flame_channel TW_015_v03.timewarp
+#   bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/Luxury/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
 #   
 # == Author
 #   Julik <me@julik.nl>
