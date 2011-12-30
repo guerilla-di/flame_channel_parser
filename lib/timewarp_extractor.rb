@@ -4,7 +4,7 @@ module FlameChannelParser
   class TimewarpExtractor
     
     # Channels that can be the timewarp
-    CHANNELS = %( Timing/Timing  Frame )
+    CHANNELS = %( Timing/Timing  Frame Timing)
     
     class X < Extractor
       
