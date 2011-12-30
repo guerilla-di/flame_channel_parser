@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "flame_channel_parser"
-  s.version = "4.0.1"
+  s.version = "4.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Julik Tarkhanov"]
@@ -70,10 +70,10 @@ Gem::Specification.new do |s|
     "test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp",
     "test/snaps/TW_TEST.F_Kronos",
     "test/snaps/timewarp_where_interp_fails_at_end.timewarp",
+    "test/test_bake_flame_channel_binary.rb",
     "test/test_base_timewarp_writer.rb",
     "test/test_batch_timewarp_writer.rb",
     "test/test_channel.rb",
-    "test/test_cli.rb",
     "test/test_cli_framecurve_to_flame.rb",
     "test/test_cli_timewarp_extractor.rb",
     "test/test_extractor.rb",
@@ -93,6 +93,7 @@ Gem::Specification.new do |s|
     "test/timewarp_examples/TW_TEST.F_Kronos",
     "test/timewarp_examples/output.txt",
     "test/timewarp_examples/simple.framecurve.txt",
+    "test/timewarp_examples/tw_batch_out.framecurve.txt",
     "test/timewarp_export_samples/BatchTW.timewarp_node",
     "test/timewarp_export_samples/Kronos.F_Kronos",
     "test/timewarp_export_samples/SoftFX.timewarp"
