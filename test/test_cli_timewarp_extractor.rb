@@ -20,14 +20,14 @@ class TestCliTimewarpExtractor < Test::Unit::TestCase
   
   def test_cli_with_no_args_produces_usage
     status, o, e = cli('')
-    assert_equal( -1, status)
+    assert_equal( 1, status)
     assert_match( /No input file path provided/, e)
     assert_match( /--help for usage information/, e)
   end
   
   def test_cli_with_nonexisting_file
     status, o, e = cli(" amazing.action")
-    assert_equal( -1, status)
+    assert_equal( 1, status)
     assert_match /does not exist/, e
   end
   
