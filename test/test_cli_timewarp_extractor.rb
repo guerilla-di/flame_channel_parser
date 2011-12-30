@@ -39,6 +39,6 @@ class TestCli < Test::Unit::TestCase
     content = File.read(FC_PATH)
     assert content.include?("framecurve.org/"), "Should include the framecurve URL"
     assert_equal 0, status
-    assert_equal 430, content.split("\r\n").length, "Should have output 428 frames"
+    assert_equal 428, content.split("\r\n").length, "Should have output 428 lines to file (first 2 lines are comments)"
   end
 end
