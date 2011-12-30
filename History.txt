@@ -1,3 +1,7 @@
+=== 4.0.1 / 2011-09-11
+
+* Minor fixes
+
 === 4.0.0 / 2011-09-11
 
 * Integrate the Framecurve library. Parse TO framecurve as well as FROM to all supported timewarpers
