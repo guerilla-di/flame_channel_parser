@@ -12,6 +12,14 @@ fail("No input file path provided.") unless fc_path
 fail("File %s does not exist." % fc_path) unless File.exist?(fc_path)
 
 curve = Framecurve::Parser.new.parse(fc_path)
+v = Framecurve::Validator.new
+v.validate(curve)
+if v.any_errors?
+  v.errors.each do | error |
+    $stderr.puts "Framecurve file was faulty: #{error}"
+  end
+end
+
 FlameChannelParser::FramecurveWriters::Base.with_each_writer do | writer_class |
   filename = [fc_path, writer_class.extension].join
   File.open(filename, "wb") do | f |
