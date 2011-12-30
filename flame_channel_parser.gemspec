@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "flame_channel_parser"
-  s.version = "3.0.0"
+  s.version = "4.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Julik Tarkhanov"]
-  s.date = "2011-11-25"
+  s.date = "2011-12-30"
   s.description = "Reads and interpolates animation channels in IFFS setups"
   s.email = "me@julik.nl"
   s.executables = ["bake_flame_channel", "bake_flame_timewarp"]
@@ -24,18 +24,32 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "bin/bake_flame_channel",
-    "bin/bake_flame_timewarp",
+    "bin/framecurve_from_flame",
+    "bin/framecurve_to_flame",
     "flame_channel_parser.gemspec",
+    "lib/builder.rb",
     "lib/channel.rb",
     "lib/extractor.rb",
     "lib/flame_channel_parser.rb",
+    "lib/framecurve_writers/base.rb",
+    "lib/framecurve_writers/batch_timewarp.rb",
+    "lib/framecurve_writers/kronos.rb",
+    "lib/framecurve_writers/softfx_timewarp.rb",
+    "lib/framecurve_writers/templates/BatchTW.xml",
+    "lib/framecurve_writers/templates/SampleKronos.F_Kronos",
+    "lib/framecurve_writers/templates/TW_Sample.timewarp",
+    "lib/framecurve_writers/templates/key.xml",
     "lib/interpolator.rb",
     "lib/key.rb",
     "lib/parser.rb",
     "lib/segments.rb",
     "lib/timewarp_extractor.rb",
+    "lib/xml_parser.rb",
     "test/channel_with_constants.dat",
+    "test/helper.rb",
     "test/sample_channel.dat",
+    "test/snaps/BatchTimewar_proper.xml",
+    "test/snaps/BatchTimewarp_ext1.timewarp_node",
     "test/snaps/Cycle_and_revcycle.action",
     "test/snaps/FLEM_BrokenTangents.action",
     "test/snaps/FLEM_advanced_curve.png",
@@ -56,21 +70,32 @@ Gem::Specification.new do |s|
     "test/snaps/TW_SingleFrameExtrapolated_from2011.timewarp",
     "test/snaps/TW_TEST.F_Kronos",
     "test/snaps/timewarp_where_interp_fails_at_end.timewarp",
+    "test/test_base_timewarp_writer.rb",
+    "test/test_batch_timewarp_writer.rb",
     "test/test_channel.rb",
     "test/test_cli.rb",
+    "test/test_cli_framecurve_to_flame.rb",
     "test/test_cli_timewarp_extractor.rb",
     "test/test_extractor.rb",
+    "test/test_flame_builder.rb",
     "test/test_flame_channel_parser.rb",
     "test/test_interpolator.rb",
     "test/test_key.rb",
+    "test/test_kronos_timewarp_writer.rb",
     "test/test_segments.rb",
+    "test/test_softfx_timewarp_writer.rb",
     "test/test_timewarp_extractor.rb",
+    "test/test_xml_setup.rb",
     "test/timewarp_examples/TW_015_010_v01_Baked.timewarp",
     "test/timewarp_examples/TW_016_010_v01.timewarp",
     "test/timewarp_examples/TW_016_010_v01_Baked.timewarp",
     "test/timewarp_examples/TW_16_010_v01.output.txt",
     "test/timewarp_examples/TW_TEST.F_Kronos",
-    "test/timewarp_examples/output.txt"
+    "test/timewarp_examples/output.txt",
+    "test/timewarp_examples/simple.framecurve.txt",
+    "test/timewarp_export_samples/BatchTW.timewarp_node",
+    "test/timewarp_export_samples/Kronos.F_Kronos",
+    "test/timewarp_export_samples/SoftFX.timewarp"
   ]
   s.homepage = "http://guerilla-di.org/flame-channel-parser/"
   s.licenses = ["MIT"]
@@ -83,17 +108,20 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<update_hints>, ["~> 1.0"])
+      s.add_runtime_dependency(%q<framecurve>, ["~> 1.0.1"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<cli_test>, ["~> 1.0"])
     else
       s.add_dependency(%q<update_hints>, ["~> 1.0"])
+      s.add_dependency(%q<framecurve>, ["~> 1.0.1"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<cli_test>, ["~> 1.0"])
     end
   else
     s.add_dependency(%q<update_hints>, ["~> 1.0"])
+    s.add_dependency(%q<framecurve>, ["~> 1.0.1"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<cli_test>, ["~> 1.0"])
