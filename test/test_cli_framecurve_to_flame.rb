@@ -37,6 +37,7 @@ class TestCliFramecurveToFlame < Test::Unit::TestCase
     files.each do | path |
       channels = FlameChannelParser.parse_file_at(path)
       the_channel = channels.find{|c| c.length == 30 }
+      
       assert_not_nil the_channel, "Should have exported at least one channel of 30 frames for #{path}"
     end
   end

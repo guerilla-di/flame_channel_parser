@@ -24,15 +24,15 @@ module FlameChannelParser
   
   # Returns the XML parser class for XML setups
   def self.get_parser_class(for_io)
-    token = '<Setup>'
+    tokens = %w( <Setup> <?xml )
     current = for_io.pos
-    parser_class = if for_io.read(token.size) == token
-      XMLParser
-    else
-      Parser
+    tokens.each do | token |
+      for_io.rewind
+      return XMLParser if for_io.read(token.size) == token
     end
+    return Parser
+  ensure
     for_io.seek(current)
-    return parser_class
   end
 end
 
