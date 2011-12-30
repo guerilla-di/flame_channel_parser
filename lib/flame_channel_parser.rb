@@ -36,5 +36,5 @@ end
 ).each {|f| require File.expand_path(File.dirname(__FILE__) + "/" + f ) }
 
 %w(
-  softfx_timewarp batch_timewarp kronos 
+  base softfx_timewarp batch_timewarp kronos 
 ).each {|f| require File.expand_path(File.dirname(__FILE__) + "/framecurve_writers/" + f ) }
