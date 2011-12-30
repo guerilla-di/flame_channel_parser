@@ -5,7 +5,7 @@
 #
 # == Usage
 # 
-#   bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/Luxury/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
+#   bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/Luxury/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.txt
 #   
 # == Author
 #   Julik <me@julik.nl>
@@ -18,7 +18,7 @@ require "update_hints"
 options = {:destination => $stdout}
 
 op = OptionParser.new
-op.banner = "Usage: bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/Luxury/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt\n" +
+op.banner = "Usage: bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/Luxury/timewarp/shot2_tw.timewarp > /mnt/3d/curves/shot2_tw.txt\n" +
   "The output file can be used as Time+Value ASCII input for Nuke " + 
   "or parsed with any simple script"
 op.on(" -c", "--channel CHANNEL_NAME", String,
