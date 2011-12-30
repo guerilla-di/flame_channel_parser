@@ -10,3 +10,4 @@ coverage.*
 .yardoc
 *.numbers
 ._*
+Gemfile.lock
