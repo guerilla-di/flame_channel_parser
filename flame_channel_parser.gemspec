@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.date = "2011-12-30"
   s.description = "Reads and interpolates animation channels in IFFS setups"
   s.email = "me@julik.nl"
-  s.executables = ["bake_flame_channel", "bake_flame_timewarp"]
+  s.executables = ["bake_flame_channel", "framecurve_from_flame", "framecurve_to_flame"]
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
