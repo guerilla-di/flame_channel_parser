@@ -5,6 +5,7 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
   # Here you can assign a logger proc or a lambda that will be call'ed with progress reports
   attr_accessor :logger_proc
   
+  # A SAX-based translation layer
   class XMLToSetup
     include REXML::StreamListener
     

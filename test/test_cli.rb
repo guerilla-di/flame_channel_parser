@@ -5,6 +5,7 @@ class TestCli < Test::Unit::TestCase
   def setup
     binary = File.expand_path(File.dirname(__FILE__) + "/../bin/bake_flame_channel")
     @app = CLITest.new(binary)
+    assert_not_nil @app
   end
   
   def test_cli_with_no_args_produces_usage
@@ -36,20 +37,23 @@ class TestCli < Test::Unit::TestCase
    
   def test_cli_with_curve_limits
      full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW_015_010_v03.timewarp"
+     
      status, output, e = @app.run(" --keyframed-range-only " + full_path)
      assert_equal 0, status
      assert_equal 531, output.split("\n").length, "Should have output 513 frames"
   end
   
   def test_cli_with_output_to_file
-    tf = Tempfile.new("experiment")
-    full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW.timewarp"
-    status, output, e = @app.run(" --to-file " + tf.path + " " + full_path)
-    
-    assert_equal 0, status
-    assert_equal 0, output.length
-    assert_equal 747, File.read(tf.path).split("\n").length, "Should have output 816 frames"
-  ensure
-    tf.close!
+    begin
+      tf = Tempfile.new("experiment")
+      full_path = File.expand_path(File.dirname(__FILE__)) + "/snaps/TW.timewarp"
+      status, output, e = @app.run(" --to-file " + tf.path + " " + full_path)
+      
+      assert_equal 0, status
+      assert_equal 0, output.length
+      assert_equal 747, File.read(tf.path).split("\n").length, "Should have output 816 frames"
+    ensure
+      tf.close!
+    end
   end
 end
