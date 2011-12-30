@@ -15,6 +15,11 @@ module FlameChannelParser
     end
   end
   
+  # Parse a Flame setup at passed path. Will return the channels instead of yielding them
+  def self.parse_file_at(path)
+    File.open(path, &method(:parse))
+  end
+  
   private
   
   # Returns the XML parser class for XML setups

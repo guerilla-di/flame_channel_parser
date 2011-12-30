@@ -13,7 +13,7 @@ fail("File %s does not exist." % fc_path) unless File.exist?(fc_path)
 
 curve = Framecurve::Parser.new.parse(fc_path)
 FlameChannelParser::FramecurveWriters::Base.with_each_writer do | writer_class |
-  filename = [fc_path, writer_class.extension].join('.')
+  filename = [fc_path, writer_class.extension].join
   File.open(filename, "wb") do | f |
     writer_class.new.run_export_from_framecurve(f, curve)
   end
