@@ -1,6 +1,6 @@
 require "helper"
 
-class TestCli < Test::Unit::TestCase
+class TestCliTimewarpExtractor < Test::Unit::TestCase
   
   BINARY = File.expand_path(File.dirname(__FILE__) + "/../bin/framecurve_from_flame")
   FC_PATH = File.expand_path(File.dirname(__FILE__)) + "/timewarp_examples/TW_016_010_v01.framecurve.txt"
