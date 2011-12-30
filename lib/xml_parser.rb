@@ -80,7 +80,6 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
     # I am almost sure that ADSK does the same.
     t = Tempfile.new("bx")
     REXML::Document.parse_stream(io, XMLToSetup.new(t))
-    puts t.read
     t.rewind
     if block_given?
       super(t, &Proc.new)
