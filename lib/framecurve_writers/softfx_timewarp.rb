@@ -1,22 +1,10 @@
 # Writes out a framecurve setup
-class FlameChannelParser::FramecurveWriters::SoftfxTimewarp
+class FlameChannelParser::FramecurveWriters::SoftfxTimewarp < FlameChannelParser::FramecurveWriters::Base
   DATETIME_FORMAT = '%a %b %d %H:%M:%S %Y'
   TIME = Time.local(2011,12,28,14,50,05)
   
   def self.extension
     '.timewarp'
-  end
-  
-  class KeyWriter
-    attr_reader :keys
-    def initialize
-      @keys = []
-    end
-    
-    def key(at, value)
-      @keys.push([at.to_i,value.to_f])
-    end
-    
   end
   
   def run_export(io)
