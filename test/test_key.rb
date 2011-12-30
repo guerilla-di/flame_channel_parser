@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 
 class TestKey < Test::Unit::TestCase

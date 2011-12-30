@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 
 class FlameBuilderTest < Test::Unit::TestCase

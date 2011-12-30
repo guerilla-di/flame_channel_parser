@@ -1,3 +1,5 @@
+require "framecurve"
+
 module FlameChannelParser
   class TimewarpExtractor
     
@@ -19,14 +21,14 @@ module FlameChannelParser
       
       # Overridden to force CRLF line breaks as per Framecurve spec
       def write_frame(to_io, frame, value)
-        to_io.write(FRAMECURVE_FORMAT % [frame, value])
+        @c.tuple!(frame, value)
       end
       
       # Overridden to write a framecurve header
       def write_channel(interpolator, to_io, from_frame_i, to_frame_i)
-        to_io.write("# http://framecurve.org/specification-v1.html\r\n")
-        to_io.write("# at_frame\t use_frame\r\n")
+        @c = Framecurve::Curve.new
         super
+        Framecurve::Serializer.new.serialize(to_io, @c)
       end
     end
     

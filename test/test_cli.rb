@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 class TestCli < Test::Unit::TestCase
   

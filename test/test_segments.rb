@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 
 include FlameChannelParser::Segments

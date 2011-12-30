@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 D = 0.001
 

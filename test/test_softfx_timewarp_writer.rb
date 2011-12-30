@@ -1,4 +1,4 @@
-require "./helper"
+require "helper"
 
 class TestSoftfxTimewarpWriter < Test::Unit::TestCase
   def test_simple_export
