@@ -1,8 +1,6 @@
 require "helper"
 
-
-require File.dirname(__FILE__) + "/../lib/flame_channel_parser"
-
+# TODO: refactor to not use the parser
 class TestInterpolator < Test::Unit::TestCase
   DELTA = 0.05
   
@@ -119,6 +117,16 @@ class TestInterpolator < Test::Unit::TestCase
     interp = chan.to_interpolator
     assert_in_delta 1, interp.sample_at(1), DELTA
     assert_in_delta 374.75, interp.sample_at(300), DELTA
+  end
+  
+  def test_xml_timewarp_with_float_frames
+    data = File.open(File.dirname(__FILE__) + "/snaps/BatchTimewarp_ext1.timewarp_node")
+    channels_in_tw = FlameChannelParser.parse(data)
+    chan = channels_in_tw.find{|c| c.name == "Timing"}
+    
+    interp = chan.to_interpolator
+    assert_in_delta 1, interp.sample_at(1), DELTA
+    assert_in_delta 242.88, interp.sample_at(300), DELTA
   end
   
   def test_descending_linear_prepolate
