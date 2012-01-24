@@ -11,7 +11,6 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
     
     def initialize(text_setup_destination_io)
       @buffer = text_setup_destination_io
-      @indent = 0
       @in_channel = false
       @path = []
     end
