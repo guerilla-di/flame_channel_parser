@@ -2,15 +2,15 @@ require 'rexml/document'
 require "rexml/streamlistener"
 
 class FlameChannelParser::XMLParser < FlameChannelParser::Parser
-  # Here you can assign a logger proc or a lambda that will be call'ed with progress reports
-  attr_accessor :logger_proc
   
-  # A SAX-based translation layer
+  # A SAX-based translation layer for XML-based setups.
+  # It will listen for specific tag names and transform the XML
+  # format into the old-school tab-delimited text format as it goes
   class XMLToSetup
     include REXML::StreamListener
     
-    def initialize(vanilla_setup)
-      @dest = vanilla_setup
+    def initialize(text_setup_destination_io)
+      @buffer = text_setup_destination_io
       @indent = 0
       @in_channel = false
       @path = []
@@ -35,10 +35,10 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
         @in_channel = true
         # Compose the full channel name
         
-        @dest.puts("Channel %s" % channel_name)
+        @buffer.puts("Channel %s" % channel_name)
       elsif element == "Key"
         @in_key = true
-        @dest.puts("\tKey %d" % attributes["Index"].to_i)
+        @buffer.puts("\tKey %d" % attributes["Index"].to_i)
       end
     end
     
@@ -50,20 +50,20 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
       @path.pop
       if element == "Channel"
         @in_channel = false
-        @dest.puts("\tEnd")
+        @buffer.puts("\tEnd")
       end
       
       if element == "Key"
         @in_key = false
-        @dest.puts("\t\tEnd")
+        @buffer.puts("\t\tEnd")
       end
       
       if @in_key
-        @dest.puts("\t\t" + transfo(element) + " " + @text)
+        @buffer.puts("\t\t" + transfo(element) + " " + @text)
       end
       
       if !@in_key && @in_channel
-        @dest.puts("\t" + transfo(element) + " " + @text)
+        @buffer.puts("\t" + transfo(element) + " " + @text)
       end
     end
     
