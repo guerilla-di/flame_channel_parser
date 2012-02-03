@@ -1,10 +1,9 @@
-= flame_channel_parser
+Flame is a compositing powerhouse, and it's animation tools are extremely good for quickly prototyping things in front of clients. However, once you want to pull your
+animation into other packages it can get troublesome, since only Action nodes currently support any kind of export (and it's FBX, and it's only partial).
+`flame_channel_parser` alleviates the problem - it can load **any** Flame setup file (an `.action` file, or a `.stabilizer` file, or any file created by one of your
+Sparks - like Kronos timewarps for examople) and extract arbitrary animation curves as tables of frames and values.
 
-* http://guerilla-di.org/flame-channel-parser
-
-== DESCRIPTION:
-
-Includes a small library for extracting, parsing and baking animation curves made on Discrodesk Floke/Inflinto, also known as flame.
+This gem includes a small library for extracting, parsing and baking animation curves made on Discrodesk Floke/Inflinto, also known as flame.
 Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and advice.
 
 == FEATURES/PROBLEMS:
@@ -55,7 +54,7 @@ To use the library:
     
 == REQUIREMENTS:
 
-* Ruby 1.8.6 and above
+* Ruby 1.8.7 and above
 
 == INSTALL:
 
