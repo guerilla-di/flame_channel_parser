@@ -33,7 +33,7 @@ The bonuses are of course in the details - **flame_channel_parser** is a meticul
 bitch and will faithfully replicate all the tricky things you can do to your animation curves to give them more _oomph_ - like broken tangents, two keyframes on
 500 frames with wild oscillations, looping and linear extrapolations, constant interpolations for jumps and so on. In short, this will _interpolate_ your
 animation channel and extract it frame by frame, so all the animation is intact. **No keyframe baking is necessary** for the Flame operator to do.
-Of curse it supports both varieties of Flame setups - the newer 2012 ones as good as the old 9.0 - 2011 ones.
+Of course it supports both varieties of Flame setups - the newer 2012 ones as good as the old 9.0 - 2011 ones.
 
 To use the library:
     
