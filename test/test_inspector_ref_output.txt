@@ -1,0 +1,10 @@
+Speed - animated, 816 keys, first at 1 last at 816
+Timing
+ Timing - animated, 816 keys, first at 1 last at 816
+Mix
+ Mix - no animations, value 0.0
+Trail
+ Pre_Trail - no animations, value 1.0
+ Pre_Weight - no animations, value 100.0
+ Post_Trail - no animations, value 1.0
+ Post_Weight - no animations, value 100.0

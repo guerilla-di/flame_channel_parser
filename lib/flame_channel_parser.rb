@@ -37,7 +37,7 @@ module FlameChannelParser
 end
 
 %w(
-  key channel parser segments interpolator extractor timewarp_extractor builder xml_parser
+  key channel parser segments interpolator extractor timewarp_extractor builder xml_parser inspector
 ).each {|f| require File.expand_path(File.dirname(__FILE__) + "/" + f ) }
 
 %w(
