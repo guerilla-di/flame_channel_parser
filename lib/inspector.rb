@@ -1,8 +1,9 @@
 # Prints out a viewable tree of channel metadata. Useful when you need to inspect comparable setups
 # for small differentces in channel ordering and animation.
 class FlameChannelParser::Inspector
+  
   def initialize(channels_arr)
-    @branches = {}
+    @branches = OH.new
     channels_arr.each {|c| cluster(c) }
   end
   
@@ -12,6 +13,23 @@ class FlameChannelParser::Inspector
   end
   
   private
+  
+  class OH < Hash # It sucks to be Ruby 1.8-compatible sometimes.
+    def initialize
+      super
+      @keys_in_order = []
+    end
+    
+    def []=(k, v)
+      @keys_in_order.delete(k)
+      @keys_in_order << k
+      super(k, v)
+    end
+    
+    def each_pair
+      @keys_in_order.each {|k| yield(k, self[k]) }
+    end
+  end
   
   def puts(string)
     @out.puts(string)
@@ -46,7 +64,7 @@ class FlameChannelParser::Inspector
   
     current = branches
     path_parts.each do | path_part |
-      current[path_part] ||= {}
+      current[path_part] ||= OH.new
       current = current[path_part]
     end
     current[leaf_name] = channel
