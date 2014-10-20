@@ -1,5 +1,5 @@
 module FlameChannelParser
-  VERSION = '4.0.2'
+  VERSION = '4.1.0'
   
   module FramecurveWriters; end
   

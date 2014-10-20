@@ -13,6 +13,10 @@ Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and ad
 
 == SYNOPSIS:
 
+To examing what channels your setup contains, use the flame_channel_inspect_binary
+    
+    $flame_channel_inspect /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp
+
 To just bake a specific channel, use the bake_flame_channel binary.
 
     $bake_flame_channel --channel Timing/Timing -e 123 /usr/discreet/projects/BZO/timewarp/s02_tw.timewarp > /mnt/3d/curves/shot2_tw.framecurve.txt
