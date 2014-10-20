@@ -1,6 +1,5 @@
 require "helper"
 
-
 class TestFlameChannelParser < Test::Unit::TestCase
   D = 0.0001
   
