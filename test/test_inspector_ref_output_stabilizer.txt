@@ -1,0 +1,76 @@
+tracker0_0
+ ref
+  x - animated, 1 key at 1, value 505.5
+  y - animated, 1 key at 1, value -496.5
+  width - no animations, value 10.0
+  height - no animations, value 10.0
+  dx - animated, 2 keys, first at 0 last at 1
+  dy - animated, 2 keys, first at 0 last at 1
+ track
+  x - no animations, value 960.0
+  y - no animations, value 540.0
+  width - no animations, value 15.0
+  height - no animations, value 15.0
+ shift
+  x - animated, 201 keys, first at 1 last at 201
+  y - animated, 201 keys, first at 1 last at 201
+ offset
+  x - no animations, value 0.0
+  y - no animations, value 0.0
+tracker0_1
+ ref
+  x - animated, 1 key at 1, value 550.5
+  y - animated, 1 key at 1, value -12.5
+  width - no animations, value 10.0
+  height - no animations, value 10.0
+  dx - animated, 2 keys, first at 0 last at 1
+  dy - animated, 2 keys, first at 0 last at 1
+ track
+  x - no animations, value 960.0
+  y - no animations, value 540.0
+  width - no animations, value 15.0
+  height - no animations, value 15.0
+ shift
+  x - animated, 201 keys, first at 1 last at 201
+  y - animated, 201 keys, first at 1 last at 201
+ offset
+  x - no animations, value 0.0
+  y - no animations, value 0.0
+tracker1_0
+ ref
+  x - animated, 1 key at 1, value 1409.75403
+  y - animated, 1 key at 1, value -504.210999
+  width - no animations, value 10.0
+  height - no animations, value 10.0
+  dx - animated, 2 keys, first at 0 last at 1
+  dy - animated, 2 keys, first at 0 last at 1
+ track
+  x - no animations, value 960.0
+  y - no animations, value 540.0
+  width - no animations, value 15.0
+  height - no animations, value 15.0
+ shift
+  x - animated, 201 keys, first at 1 last at 201
+  y - animated, 201 keys, first at 1 last at 201
+ offset
+  x - no animations, value 0.0
+  y - no animations, value 0.0
+tracker1_1
+ ref
+  x - animated, 1 key at 1, value 1402.0
+  y - animated, 1 key at 1, value -13.0
+  width - no animations, value 10.0
+  height - no animations, value 10.0
+  dx - animated, 2 keys, first at 0 last at 1
+  dy - animated, 2 keys, first at 0 last at 1
+ track
+  x - no animations, value 960.0
+  y - no animations, value 540.0
+  width - no animations, value 15.0
+  height - no animations, value 15.0
+ shift
+  x - animated, 202 keys, first at 1 last at 202
+  y - animated, 202 keys, first at 1 last at 202
+ offset
+  x - no animations, value 0.0
+  y - no animations, value 0.0

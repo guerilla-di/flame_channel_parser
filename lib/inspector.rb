@@ -47,12 +47,15 @@ class FlameChannelParser::Inspector
   end
   
   def channel_metadata(channel)
-    if channel.length > 0
+    if channel.length.zero?
+      "no animations, value %s" % [channel.base_value]
+    elsif channel.length > 1
       first_key = channel[0].frame
       last_key = channel[-1].frame
       "animated, %d keys, first at %d last at %d" % [channel.length, first_key, last_key]
     else
-      "no animations, value %s" % [channel.base_value]
+      first_key = channel[0].frame
+      "animated, 1 key at %d, value %s" % [first_key, channel[0].value]
     end
   end
   
