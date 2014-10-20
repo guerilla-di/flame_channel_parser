@@ -6,12 +6,12 @@ Sparks - like Kronos timewarps for examople) and extract arbitrary animation cur
 This gem includes a small library for extracting, parsing and baking animation curves made on Discrodesk Floke/Inflinto, also known as flame.
 Thanks to Marijn Eken, Philippe Soeiro and Andre Gagnon for their support and advice.
 
-== FEATURES/PROBLEMS:
+## Features:
 
 * All extrapolation and interpolation methods are supported (yes two keyframes with tangents across 2000 frames will do!)
 * Expressions on channels won't be evaluated (obviously!)
 
-== SYNOPSIS:
+## Synopsis
 
 To examing what channels your setup contains, use the flame_channel_inspect_binary
     
@@ -61,19 +61,19 @@ To use the library:
       p interpolator.value_at(frame_in_setup)
     end
     
-== REQUIREMENTS:
+## Requirements
 
 * Ruby 1.8.7 and above
 
-== INSTALL:
+## Installation
 
-* gem install flame_channel_parser
+    $gem install flame_channel_parser
 
-== LICENSE:
+## License
 
 (The MIT License)
 
-Copyright (c) 2011 Julik Tarkhanov
+Copyright (c) 2011-2015 Julik Tarkhanov
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
