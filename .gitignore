@@ -11,3 +11,4 @@ coverage.*
 *.numbers
 ._*
 Gemfile.lock
+.ruby-version
