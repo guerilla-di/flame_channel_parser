@@ -18,16 +18,6 @@ setup_path = ARGV.shift
 fail "No input file path provided." unless setup_path
 fail "File does not exist." unless File.exist?(setup_path)
 
-def show_channel(c)
-  puts c.name
-  if c.empty?
-    puts "\tNo animation"
-  else
-    puts "\t%d keyframes" % c.length
-    puts "\tFirst frame: %d Last frame: %d" % [c[0].frame, c[-1].frame]
-  end
-end
-
 parser = FlameChannelParser::Parser.new
 File.open(setup_path, "r") do | f |
   channels = parser.parse(f)
