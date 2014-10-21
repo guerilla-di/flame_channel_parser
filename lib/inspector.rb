@@ -60,12 +60,10 @@ class FlameChannelParser::Inspector
   end
   
   def cluster(channel)
-    branches = @branches
-  
     path_parts = channel.name.split('/')
     leaf_name = path_parts.pop
   
-    current = branches
+    current = @branches
     path_parts.each do | path_part |
       current[path_part] ||= OH.new
       current = current[path_part]
