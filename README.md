@@ -1,3 +1,7 @@
+# flame_channel_parser
+
+[![Build Status](https://travis-ci.org/guerilla-di/flame_channel_parser.svg?branch=master)](https://travis-ci.org/guerilla-di/flame_channel_parser)
+
 Flame is a compositing powerhouse, and it's animation tools are extremely good for quickly prototyping things in front of clients. However, once you want to pull your
 animation into other packages it can get troublesome, since only Action nodes currently support any kind of export (and it's FBX, and it's only partial).
 `flame_channel_parser` alleviates the problem - it can load **any** Flame setup file (an `.action` file, or a `.stabilizer` file, or any file created by one of your
