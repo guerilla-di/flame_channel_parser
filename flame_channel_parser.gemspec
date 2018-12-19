@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email = "me@julik.nl"
   s.executables = ["bake_flame_channel", "framecurve_from_flame", "framecurve_to_flame"]
   s.extra_rdoc_files = [
-    "README.rdoc"
+    "README.md"
   ]
   s.files = `git ls-files -z`.split("\x0")
   s.homepage = "http://guerilla-di.org/flame-channel-parser/"
