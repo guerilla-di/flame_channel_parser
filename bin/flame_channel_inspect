@@ -10,7 +10,7 @@
 # == Author
 #   Julik <me@julik.nl>
 
-require File.expand_path(File.dirname(__FILE__)) + '/../lib/flame_channel_parser' unless defined?(FlameChannelParser)
+require File.expand_path(File.dirname(__FILE__)) + '/../lib/flame_channel_parser'
 require 'rubygems'
 require "update_hints"
 

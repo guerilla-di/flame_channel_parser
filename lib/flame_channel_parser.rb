@@ -1,5 +1,6 @@
+require File.dirname(__FILE__) + '/flame_channel_parser/version'
+
 module FlameChannelParser
-  VERSION = '4.1.0'
   
   module FramecurveWriters; end
   
