@@ -8,5 +8,4 @@ Rake::TestTask.new("test") do |t|
   t.verbose = true
 end
 
-# Automatically update the LICENSE
 task :default => [ :test ]
