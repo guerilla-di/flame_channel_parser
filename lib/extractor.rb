@@ -1,3 +1,4 @@
+# shareable_constant_value: literal
 # Extracts and bakes a specific animation channel to a given buffer, one string per frame
 class FlameChannelParser::Extractor
   
@@ -27,7 +28,7 @@ class FlameChannelParser::Extractor
   end
   
   def extract(path, options)
-    options = DEFAULTS.dup.merge(options)
+    options = DEFAULTS.merge(:destination => $stdout).merge(options)
     File.open(path) do |f|
       
       # Then parse
@@ -47,7 +48,6 @@ class FlameChannelParser::Extractor
   
   DEFAULT_START_FRAME = 1
   DEFAULTS = {
-    :destination => $stdout,
     :start_frame => nil,
     :end_frame => nil,
     :channel => DEFAULT_CHANNEL_TO_EXTRACT,

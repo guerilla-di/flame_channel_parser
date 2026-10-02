@@ -1,3 +1,11 @@
+=== 4.2.0 / 2026-10-02
+
+* Make parsing, interpolation and Builder usable from within Ractors (Ruby 4.0+)
+* Fix `FlameChannelParser.parse`, `XMLParser#parse` and the framecurve writers on Ruby 3+
+  (`Proc.new` without a block)
+* Declare the dependencies on `matrix` and `rexml`, which are no longer default gems
+* Require framecurve 2.2.4+
+
 === 4.1.0 / 2014-10-20
 
 * Adds `flame_channel_inspect` for examining Flame setups

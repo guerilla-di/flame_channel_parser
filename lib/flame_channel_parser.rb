@@ -7,13 +7,8 @@ module FlameChannelParser
   # Parse a Flame setup into an array of Channel objects.
   # If a block is given to the method it will yield Channel
   # objects one by one instead of accumulating them into an array (useful for big setups)
-  def self.parse(io)
-    c = get_parser_class(io)
-    if block_given?
-      c.new.parse(io, &Proc.new)
-    else
-      c.new.parse(io)
-    end
+  def self.parse(io, &blk)
+    get_parser_class(io).new.parse(io, &blk)
   end
   
   # Parse a Flame setup at passed path. Will return the channels instead of yielding them

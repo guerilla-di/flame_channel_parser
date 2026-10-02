@@ -12,14 +12,16 @@ class FlameChannelParser::FramecurveWriters::Base
     
   end
   
+  # Kept as a frozen array in a class-level ivar so that it can be read from non-main Ractors
   def self.inherited(by)
-    @@writers ||= []
-    @@writers.push(by)
+    writers = FlameChannelParser::FramecurveWriters::Base.instance_variable_get(:@writers) || []
+    FlameChannelParser::FramecurveWriters::Base.instance_variable_set(:@writers, (writers + [by]).freeze)
+    super
   end
   
   # Yields each defined writer class to the block
-  def self.with_each_writer
-    @@writers.each(&Proc.new)
+  def self.with_each_writer(&blk)
+    FlameChannelParser::FramecurveWriters::Base.instance_variable_get(:@writers).each(&blk)
   end
   
   # Should return the desired extension for the exported file

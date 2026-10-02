@@ -1,3 +1,4 @@
+# shareable_constant_value: literal
 require File.expand_path(File.dirname(__FILE__)) + "/segments"
 
 # Used to sample Flame animation curves. Pass a Channel

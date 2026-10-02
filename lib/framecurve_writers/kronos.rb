@@ -1,7 +1,8 @@
+# shareable_constant_value: literal
 # Writes out a framecurve setup
 class FlameChannelParser::FramecurveWriters::Kronos < FlameChannelParser::FramecurveWriters::SoftfxTimewarp
-  TOKEN = Regexp.new('__INSERT_FRAME_ANIM__')
-  TEMPLATE = File.dirname(__FILE__) + "/templates/SampleKronos.F_Kronos"
+  TOKEN = Regexp.new('__INSERT_FRAME_ANIM__').freeze
+  TEMPLATE = (File.dirname(__FILE__) + "/templates/SampleKronos.F_Kronos").freeze
   
   def self.extension
     '.F_Kronos'

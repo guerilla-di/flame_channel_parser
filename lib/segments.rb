@@ -1,3 +1,4 @@
+# shareable_constant_value: literal
 require "matrix"
 
 module FlameChannelParser::Segments #:nodoc:
@@ -52,7 +53,7 @@ module FlameChannelParser::Segments #:nodoc:
       [-2,  3,   0,  0],
       [1,   -2,  1,  0],
       [1,   -1,  0,  0]
-    ].transpose
+    ].transpose.freeze
   
     def initialize(from_frame, to_frame, value1, value2, tangent1, tangent2)
       

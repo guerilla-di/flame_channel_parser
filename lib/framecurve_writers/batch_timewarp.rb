@@ -1,8 +1,9 @@
+# shareable_constant_value: literal
 # Writes out a Batch timewarp node setup
 class FlameChannelParser::FramecurveWriters::BatchTimewarp < FlameChannelParser::FramecurveWriters::SoftfxTimewarp
   
-  TEMPLATE = File.dirname(__FILE__) + "/templates/BatchTW.xml"
-  TEMPLATE_KEY = File.dirname(__FILE__) + "/templates/key.xml"
+  TEMPLATE = (File.dirname(__FILE__) + "/templates/BatchTW.xml").freeze
+  TEMPLATE_KEY = (File.dirname(__FILE__) + "/templates/key.xml").freeze
   
   def self.extension
     '.timewarp_node'

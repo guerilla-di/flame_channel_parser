@@ -22,7 +22,9 @@ Gem::Specification.new do |s|
 
   s.specification_version = 3
   s.add_runtime_dependency("update_hints", ["~> 1.0"])
-  s.add_runtime_dependency("framecurve", ["~> 2"])
+  s.add_runtime_dependency("framecurve", ["~> 2", ">= 2.2.4"])
+  s.add_runtime_dependency("matrix")
+  s.add_runtime_dependency("rexml")
   s.add_development_dependency("rake", [">= 0"])
   s.add_development_dependency("cli_test", ["~> 1.0"])
   s.add_development_dependency("test-unit")

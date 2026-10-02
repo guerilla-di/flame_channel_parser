@@ -1,7 +1,8 @@
+# shareable_constant_value: literal
 # Writes out a framecurve setup
 class FlameChannelParser::FramecurveWriters::SoftfxTimewarp < FlameChannelParser::FramecurveWriters::Base
   DATETIME_FORMAT = '%a %b %d %H:%M:%S %Y'
-  TIME = Time.local(2011,12,28,14,50,05)
+  TIME = Time.local(2011,12,28,14,50,05).freeze
   
   def self.extension
     '.timewarp'

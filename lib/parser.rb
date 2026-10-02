@@ -1,3 +1,4 @@
+# shareable_constant_value: literal
 module FlameChannelParser
   # Comnplete parser class for all Flame/Smoke versions
   class Parser

@@ -1,3 +1,4 @@
+# shareable_constant_value: literal
 # A Builder-like class for exporting Flame setups
 class FlameChannelParser::Builder #< BasicObject
   INDENT = "\t"
@@ -67,8 +68,8 @@ class FlameChannelParser::Builder #< BasicObject
   end
   
   def __camelize(s)
-    @@camelizations ||= {}
-    @@camelizations[s] ||= s.to_s.gsub(/(^|_)(.)/) { $2.upcase }
+    @camelizations ||= {}
+    @camelizations[s] ||= s.to_s.gsub(/(^|_)(.)/) { $2.upcase }
   end
   
   def __flameize(v)

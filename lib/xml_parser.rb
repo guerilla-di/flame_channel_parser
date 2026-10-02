@@ -73,17 +73,13 @@ class FlameChannelParser::XMLParser < FlameChannelParser::Parser
   
   # Parses the setup passed in the IO. If a block is given to the method it will yield Channel
   # objects one by one instead of accumulating them into an array (useful for big setups)
-  def parse(io)
+  def parse(io, &blk)
     # Ok this is gothic BUT needed. What we do is we transform the XML setup into the OLD
     # setup format, after which we run it through the OLD parser all the same.
     # I am almost sure that ADSK does the same.
     t = Tempfile.new("bx")
     REXML::Document.parse_stream(io, XMLToSetup.new(t))
     t.rewind
-    if block_given?
-      super(t, &Proc.new)
-    else
-      super(t)
-    end
+    super(t, &blk)
   end
 end
