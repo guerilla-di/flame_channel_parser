@@ -4,12 +4,12 @@ Gem::Specification.new do |s|
   s.name = "flame_channel_parser"
   s.version = FlameChannelParser::VERSION
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_ruby_version = ">= 2.6"
   s.authors = ["Julik Tarkhanov"]
   s.date = Time.now.utc.strftime("%Y-%m-%d")
   s.description = "Reads and interpolates animation channels in IFFS setups"
   s.email = "me@julik.nl"
-  s.executables = ["bake_flame_channel", "framecurve_from_flame", "framecurve_to_flame"]
+  s.executables = Dir["bin/*"].map { |f| File.basename(f) }
   s.extra_rdoc_files = [
     "README.md"
   ]
@@ -17,10 +17,8 @@ Gem::Specification.new do |s|
   s.homepage = "http://guerilla-di.org/flame-channel-parser/"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.11"
   s.summary = "A parser/interpolator for Flame/Smoke animation curves"
 
-  s.specification_version = 3
   s.add_runtime_dependency("update_hints", ["~> 1.0"])
   s.add_runtime_dependency("framecurve", ["~> 2", ">= 2.2.4"])
   s.add_runtime_dependency("matrix")
