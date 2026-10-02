@@ -106,8 +106,7 @@ class FlameChannelParser::Extractor
   end
   
   def compose_channel_not_found_message(for_channel, other_channels)
-    message = "Channel #{for_channel.inspect} not found in this setup (set the channel with the :channel option). Found other channels though:" 
-    message << "\n"
+    message = "Channel #{for_channel.inspect} not found in this setup (set the channel with the :channel option). Found other channels though:\n"
     message += other_channels.map{|c| "\t%s\n" % c.path }.join
   end
   
