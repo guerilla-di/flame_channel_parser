@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Prints out a viewable tree of channel metadata. Useful when you need to inspect comparable setups
 # for small differentces in channel ordering and animation.
 class FlameChannelParser::Inspector

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Writes out a framecurve setup
 class FlameChannelParser::FramecurveWriters::Base
   class KeyWriter

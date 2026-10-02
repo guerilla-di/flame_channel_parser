@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # shareable_constant_value: literal
 # Writes out a Batch timewarp node setup
 class FlameChannelParser::FramecurveWriters::BatchTimewarp < FlameChannelParser::FramecurveWriters::SoftfxTimewarp
@@ -14,7 +15,7 @@ class FlameChannelParser::FramecurveWriters::BatchTimewarp < FlameChannelParser:
     yield(w)
     keys = w.keys
     
-    keys_data = ''
+    keys_data = +''
     keys.each_with_index do | k, idx |
       keys_data << templatize(TEMPLATE_KEY, :frame => k[0].to_i, :value => k[1].to_f, :idx => idx)
     end

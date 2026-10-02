@@ -12,7 +12,7 @@ class TestInspector < Test::Unit::TestCase
     channels = FlameChannelParser.parse(data)
     
     inspector = FlameChannelParser::Inspector.new(channels)
-    output = ''
+    output = +''
     
     inspector.pretty_print(StringIO.new(output))
     
@@ -27,7 +27,7 @@ class TestInspector < Test::Unit::TestCase
     channels = FlameChannelParser.parse(data)
     
     inspector = FlameChannelParser::Inspector.new(channels)
-    output = ''
+    output = +''
     
     inspector.pretty_print(StringIO.new(output))
     

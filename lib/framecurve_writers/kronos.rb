@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # shareable_constant_value: literal
 # Writes out a framecurve setup
 class FlameChannelParser::FramecurveWriters::Kronos < FlameChannelParser::FramecurveWriters::SoftfxTimewarp

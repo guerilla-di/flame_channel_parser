@@ -3,7 +3,7 @@ require "helper"
 
 class FlameBuilderTest < Test::Unit::TestCase
   def setup
-    @s = ""
+    @s = +""
     @b = FlameChannelParser::Builder.new(StringIO.new(@s))
   end
   

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # shareable_constant_value: literal
 # A Builder-like class for exporting Flame setups
 class FlameChannelParser::Builder #< BasicObject

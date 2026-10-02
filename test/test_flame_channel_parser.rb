@@ -29,7 +29,7 @@ class TestFlameChannelParser < Test::Unit::TestCase
   end
   
   def test_parsing_kronos_with_reports
-    logging_console = ""
+    logging_console = +""
     data = File.open(File.dirname(__FILE__) + "/snaps/TW_TEST.F_Kronos")
     parser = FlameChannelParser::Parser.new
     parser.logger_proc = lambda do | log_message |

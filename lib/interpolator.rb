@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # shareable_constant_value: literal
 require File.expand_path(File.dirname(__FILE__)) + "/segments"
 

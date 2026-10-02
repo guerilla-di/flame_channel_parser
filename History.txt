@@ -1,3 +1,7 @@
+=== 4.2.1 / 2026-10-02
+
+* Work with frozen string literals, add frozen_string_literal magic comments to all library files
+
 === 4.2.0 / 2026-10-02
 
 * Make parsing, interpolation and Builder usable from within Ractors (Ruby 4.0+)

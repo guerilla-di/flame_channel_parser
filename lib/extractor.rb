@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # shareable_constant_value: literal
 # Extracts and bakes a specific animation channel to a given buffer, one string per frame
 class FlameChannelParser::Extractor
