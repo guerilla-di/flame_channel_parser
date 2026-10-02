@@ -33,7 +33,7 @@ class FlameChannelParser::FramecurveWriters::BatchTimewarp < FlameChannelParser:
     t = File.read(file)
     hash.each_pair do | pattern, value |
       p = Regexp.escape('$%s' % pattern)
-      handle = Regexp.new(p, [Regexp::MULTILINE, Regexp::EXTENDED])
+      handle = Regexp.new(p, Regexp::MULTILINE | Regexp::EXTENDED)
       t.gsub!(handle, value.to_s)
     end
     raise "Not all substitutions done" if t.include?('$')

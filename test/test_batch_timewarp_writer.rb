@@ -10,8 +10,6 @@ class TestBatchTimewarpWriter < Test::Unit::TestCase
       key_writer.key(19, 102)
     end
     
-    File.open(File.dirname(__FILE__) + "/timewarp_export_samples/BatchTW.timewarp_node", "wb"){|f| f.write(buf.string) }
-    
     assert_same_buffer File.open(File.dirname(__FILE__) + "/timewarp_export_samples/BatchTW.timewarp_node"), buf
   end
   

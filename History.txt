@@ -1,6 +1,7 @@
 === 4.2.1 / 2026-10-02
 
 * Work with frozen string literals, add frozen_string_literal magic comments to all library files
+* Fix the Regexp flags in the Batch timewarp writer (an Array of flags was taken as "ignore case")
 
 === 4.2.0 / 2026-10-02
 
